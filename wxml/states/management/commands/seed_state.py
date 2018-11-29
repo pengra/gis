@@ -129,7 +129,7 @@ class Command(BaseCommand):
 
     def _set_populations(self, state_fips):
         state = State.objects.get(id=state_fips)
-        for subsection in StateSubsection:
+        for subsection in StateSubsection.objects.all():
             subsection.population = sum([_.population for _ in CensusBlock.objects.filter(subsection=subsection)])
             subsection.save()
 
