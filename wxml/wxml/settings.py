@@ -74,11 +74,17 @@ WSGI_APPLICATION = 'wxml.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+PSQL = {
+    'ENGINE': 'django.contrib.gis.db.backends.postgis',
+    'NAME': os.getenv('DB_NAME', 'CIA_FBI_SUPER_HQ_DB'),
+    'USER': os.getenv('DB_USER', 'JackRyan'),
+    'PASSWORD': os.getenv('DB_PASS', 'p@ssword1'),
+    'HOST': 'localhost',
+    'PORT': '',
+}
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': PSQL
 }
 
 
