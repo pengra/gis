@@ -3,18 +3,19 @@ from descartes import PolygonPatch
 from django.core.files import File
 import random
 import fiona
+import networkx
 
 import matplotlib.pyplot as plt
 
 @task()
 def build_seed_map(title, seed, districts, multipolygon, iterations, granularity, nonprecinct):
     # Build a seed map
-    from states.models import State, StateSubsection, SeedRedistrictingMap
+    from states.models import State, StateSubsection, SeedRedistrictMap
     
     state_id = int(seed.split("_")[1])
     state = State.objects.get(id=state_id)
 
-    newSeed = SeedRedistrictingMap(
+    newSeed = SeedRedistrictMap(
         title=title,
         districts=districts,
         state=state,
@@ -37,11 +38,11 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
         notated_district = district + 1
         layer = [node for node, data in graph.nodes(data=True) if data.get('district') == notated_district]
         layer_color = "#" + str(hex(random.randint(0, int(0xFFFFFF))))[2:]
-        layer_color += "0" * (7-len(color)) # to make it 6 digits
+        layer_color += "0" * (7-len(layer_color)) # to make it 6 digits
     
         for precinct in layer:
             polygon = StateSubsection.objects.get(id=precinct).poly
-            axis.add_patch(PolygonPatch(polygon, fc=color, ec=color, alpha=0.5, zorder=2))
+            axis.add_patch(PolygonPatch(polygon, fc=layer_color, ec=layer_color, alpha=0.5, zorder=2))
 
     axis.axis('scaled')
     plt.savefig(visual_path, dpi=300)

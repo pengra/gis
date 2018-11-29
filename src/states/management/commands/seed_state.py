@@ -169,8 +169,8 @@ class Command(BaseCommand):
         for i, precinct in enumerate(polygons):
             for j, neighbor in enumerate(polygons):
                 if j <= i: continue
-                    if neighbor.poly.touches(precinct.poly):
-                        graph.add_edge(precinct_id, neighbor.id)
+                if neighbor.poly.touches(precinct.poly):
+                     graph.add_edge(precinct.id, neighbor.id)
             bar.next()
 
         bar.finish()
