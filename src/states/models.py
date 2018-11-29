@@ -81,7 +81,7 @@ class SeedRedistrictMap(models.Model):
     state = models.ForeignKey(State, on_delete=models.CASCADE)
 
     initial_visualization = models.ImageField(upload_to='redist/img/', null=True)
-    initial_file = models.FileField(upload_to='redist/shp/', null=True)
+    initial_file = models.FileField(upload_to='redist/nx/', null=True)
 
 
 class Redistrcting(models.Model):
