@@ -16,7 +16,11 @@
         <form method="POST">
 
         <div class="form-group">
+            {% if states.0.fast_visualization %}
             <img id="fast-visualization" class="img-fluid" src="/{{states.0.fast_visualization.url}}">
+            {% else %}
+            <img id="fast-visualization" class="img-fluid">
+            {% endif %}
         </div>
 
 
@@ -28,7 +32,7 @@
         <div class="form-group">
 
         <label>Seed Map</label>
-        <select name="state" class="form-control" onChange="document.getElementById('fast-visualization').src = '/' +  event.target.value.split('|')[1]">
+        <select name="seed" class="form-control" onChange="document.getElementById('fast-visualization').src = '/' +  event.target.value.split('|')[1]">
             {% for state in states %}
                 <option 
                     value="new_{{state.id}}_|{{state.fast_visualization.url}}"
