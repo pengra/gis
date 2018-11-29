@@ -6,7 +6,7 @@ class BuildNewMapForm(forms.Form):
     districts = forms.IntegerField()
     multipolygon = forms.ChoiceField(choices=(
             ('accept', "Treat Multipolygons as polygons"),
-            ('tear', "Break apart Multipolygons and combine them again post simulation")
+            ('tear', "Break apart Multipolygons and combine them again post simulation"),
             ('convexhull', "Clump all polygons that are in the convex hull of a multipolygon")
         )) # accept, tear, 
     nonprecinct = forms.ChoiceField(

@@ -93,8 +93,8 @@ class Redistrcting(models.Model):
     multi_polygon_behavior = models.CharField(
         choices=(
             ('accept', "Treat Multipolygons as polygons"),
-            ('tear', "Break apart Multipolygons and combine them again post simulation")
-            ('convexhull', "Clump all polygons that are in the convex hull of a multipolygon")
+            ('tear', "Break apart Multipolygons and combine them again post simulation"),
+            ('convexhull', "Clump all polygons that are in the convex hull of a multipolygon"),
         ),
         max_length=len('convexhull')
     )
