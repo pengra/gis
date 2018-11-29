@@ -40,8 +40,8 @@ class StateSubsection(models.Model):
     multi_polygon = models.BooleanField()
     is_precinct = models.BooleanField() # "VW" not in census_id?
 
-    land_mass = models.IntegerField() # ALAND10
-    water_mass = models.IntegerField() # AWATER10
+    land_mass = models.BigIntegerField() # ALAND10
+    water_mass = models.BigIntegerField() # AWATER10
 
     perimeter = models.FloatField()
     area = models.FloatField()
@@ -53,7 +53,7 @@ class StateSubsection(models.Model):
 
 class CensusBlock(models.Model):
 
-    id = models.IntegerField(primary_key=True, help_text="id", unique=True) #BLOCKID10
+    id = models.BigIntegerField(primary_key=True, help_text="id", unique=True) #BLOCKID10
     subsection = models.ForeignKey(StateSubsection, on_delete=models.CASCADE)
     population = models.IntegerField() #POP10
     housing_units = models.IntegerField() #HOUSING10
@@ -61,7 +61,7 @@ class CensusBlock(models.Model):
 
 class SeedRedistrictMap(models.Model):
     
-    id = models.UUIDField(primary_key = True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     state = models.ForeignKey(State, on_delete=models.CASCADE)
 
     initial_visualization = models.ImageField()
