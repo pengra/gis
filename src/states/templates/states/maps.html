@@ -10,23 +10,30 @@
     <div class="container">
 
       <div class="row">
-        
+	{% for map in maps %}        
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
-            <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail" alt="Card image cap">
+		<a href="/{{map.initial_visualization.url}}">
+            <img class="card-img-top" src="/{{map.initial_visualization.url}}" alt="{{map.title}}">
+		</a>
             <div class="card-body">
-              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+              <p class="card-text">
+		<span class="badge badge-primary">Seed</span>
+		<span class="badge badge-primary">{{map.state}}</span><br/>
+		Title: "{{map.title}}"<br/>
+		Districts: {{map.districts}}<br/>
+		</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Use as seed</button>
                 </div>
-                <small class="text-muted">9 mins</small>
+                <small class="text-muted">No iterations</small>
               </div>
             </div>
           </div>
         </div>
-
+	{% endfor %}
       </div>
     </div>
   </div>
