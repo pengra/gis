@@ -8,7 +8,8 @@ import os
 import csv
 from glob import glob
 import zipfile
-from shapely.geometry import shape, Polygon, MultiPolygon
+from shapely.geometry import shape
+from django.contrib.gis.geos import Polygon, MultiPolygon
 from progress.bar import IncrementalBar
 
 VTD_DATASOURCE = "https://www2.census.gov/geo/tiger/TIGER2012/VTD/"
@@ -59,6 +60,11 @@ class Command(BaseCommand):
             properties = polygon['properties']
             geometry = polygon['geometry']
 
+            if geometry['type'] == 'MultiPolygon':
+                gisPoly = MultiPolygon(geometry['coordinates'])
+            else:
+                gisPoly = Polygon(geometry['coordinates'])
+
             newSubsection = StateSubsection(
                 id=properties['VTDST10'],
                 state=state,
@@ -70,7 +76,7 @@ class Command(BaseCommand):
                 water_mass=properties['AWATER10'],
                 perimeter=shape(geometry).length,
                 area=shape(geometry).area,
-                poly=shape(geometry)
+                poly=gisPoly
             )
             newSubsection.save()
             bar.next()
