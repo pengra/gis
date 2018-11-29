@@ -48,6 +48,8 @@ class StateSubsection(models.Model):
 
     poly = gis_models.GeometryField(geography=True)
 
+    population = models.BigIntegerField()
+
     def __str__(self):
         return self.name
 

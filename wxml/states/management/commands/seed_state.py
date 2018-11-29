@@ -127,9 +127,16 @@ class Command(BaseCommand):
         )
         new_state.save()
 
+    def _set_populations(self, state_fips):
+        state = State.objects.get(id=state_fips)
+        for subsection in StateSubsection:
+            subsection.population = sum([_.population for _ in CensusBlock.objects.filter(subsection=subsection)])
+            subsection.save()
+
     def handle(self, *args, **options):
-        self._create_state_db(options['state_fips'], options['state_code'], options['state_name'])
-        self._load_vtd(options['state_fips'])
-        self._load_bg_vtd_map(options['state_fips'])
+        # self._create_state_db(options['state_fips'], options['state_code'], options['state_name'])
+        # self._load_vtd(options['state_fips'])
+        # self._load_bg_vtd_map(options['state_fips'])
+        self._set_populations(options['state_fips'])
         
         # self._populate_census_db()
