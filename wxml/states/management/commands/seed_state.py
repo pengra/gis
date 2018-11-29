@@ -129,14 +129,17 @@ class Command(BaseCommand):
 
     def _set_populations(self, state_fips):
         state = State.objects.get(id=state_fips)
+        bar = IncrementalBar("Applying census population data", max=len(State.objects.all()))
         for subsection in StateSubsection.objects.all():
+            bar.next()
             subsection.population = sum([_.population for _ in CensusBlock.objects.filter(subsection=subsection)])
             subsection.save()
+        bar.finish()
 
     def handle(self, *args, **options):
-        # self._create_state_db(options['state_fips'], options['state_code'], options['state_name'])
-        # self._load_vtd(options['state_fips'])
-        # self._load_bg_vtd_map(options['state_fips'])
+        self._create_state_db(options['state_fips'], options['state_code'], options['state_name'])
+        self._load_vtd(options['state_fips'])
+        self._load_bg_vtd_map(options['state_fips'])
         self._set_populations(options['state_fips'])
         
         # self._populate_census_db()
