@@ -24,7 +24,10 @@
         <label>Seed Map</label>
         <select name="state" class="form-control">
             {% for state in states %}
-                <option value="new_{{state.id}}">New Map: {{ state.name }}</option>
+                <option 
+                    value="new_{{state.id}}"
+                    onclick="alert('{{state_id}}');"
+                >New Map: {{ state.name }}</option>
             {% endfor %}
             {% for map in maps %}
                 <option value="old_{{state.id}}">Old Map: {{ state.name }}</option>
