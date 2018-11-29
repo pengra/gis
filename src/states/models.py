@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.contrib.gis.db import models as gis_models
+from states.workers import visualize_map
 
 # Create your models here.
 
@@ -27,6 +28,11 @@ class State(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        parent_save = super().save(*args, **kwargs)
+        visualize_map.delay(self.id)
+        return parent_save
 
 
 class StateSubsection(models.Model):

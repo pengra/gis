@@ -36,7 +36,7 @@ def visualize_map(state_id):
     for precinct in precincts:
         polygon = precinct.poly
         
-        import pdb; pdb.set_trace()
+        from celery.contrib import rdb; rdb.set_trace()
 
         axis.addpatch(PolygonPatch(polygon, fc=color, ec=color, alpha=0.5, zorder=2))
         
