@@ -167,12 +167,18 @@ class Command(BaseCommand):
         bar = IncrementalBar("Creating Graph Representation (Step 2: Edges)", max=len(polygons))
 
         for i, precinct in enumerate(polygons):
-            for neighbor in polygons.filter(poly__touches=precinct.poly):
-                graph.add_edge(precinct.id, neighbor.id)
-            
+            for j, neighbor in enumerate(polygons):
+                if j <= i: continue
+                    if neighbor.poly.touches(precinct.poly):
+                        graph.add_edge(precinct_id, neighbor.id)
             bar.next()
 
         bar.finish()
+
+        networkx.write_gpickle(graph, TMP_UNZIP + 'graph_{}.nx'.format(state_fips))
+        with open(TMP_UNZIP + 'graph_{}.nx'.format(state_fips), 'rb') as handle:
+            state.graph_representation = File(handle)
+            state.save()
             
 
     def handle(self, *args, **options):
