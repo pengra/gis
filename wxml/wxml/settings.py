@@ -25,7 +25,8 @@ SECRET_KEY = 'b7cqrtzn=g$-fl5p9_5#98+uerh5koy40#s1hef29u$%4@vxp*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['pengra.io']
+LOCAL_HOST = '127.0.0.1'
+ALLOWED_HOSTS = ['pengra.io', LOCAL_HOST]
 
 
 # Application definition
@@ -126,3 +127,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Celery Integration (Worker Roles!)
+# https://simpleisbetterthancomplex.com/tutorial/2017/08/20/how-to-use-celery-with-django.html
+
+CELERY_BROKER_URL = 'amqp://' + LOCAL_HOST
+CELERY_RESULT_BACKEND = 'django-db'
