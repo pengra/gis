@@ -13,6 +13,7 @@ class NewMapView(TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['states'] = State.objects.all()
+        context['maps'] = SeedRedistrictMap.objects.all()
         return context
 
     def post(self, request, *args, **kwargs):
