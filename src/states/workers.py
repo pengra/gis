@@ -1,5 +1,5 @@
 from celery.decorators import task
-from states.models import State, StateSubsection
+
 from descartes import PolygonPatch
 
 from django.core.files import File
@@ -24,6 +24,9 @@ def visualize_seed(seed_id):
 @task()
 def visualize_map(state_id):
     # Build a state map
+
+    from states.models import State, StateSubsection
+
     visual_path = "visuals/STATE_{}.png".format(state_id)
     state = State.objects.get(id=state_id)
     precincts = StateSubsection.objects.filter(state=state, is_precinct=True)
