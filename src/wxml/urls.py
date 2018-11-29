@@ -23,4 +23,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='states/maps.html')),
     path('new/', NewMapView.as_view()),
-] + static('/visuals/', document_root='visuals/') + static('/raws/', document_root='raws/')
+] + static('/visuals/', document_root='visuals/') + static('/raws/', document_root='raws/') + static('/redist/', document_root='redist/')

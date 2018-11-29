@@ -83,6 +83,9 @@ class SeedRedistrictMap(models.Model):
     initial_visualization = models.ImageField(upload_to='redist/img/', null=True)
     initial_file = models.FileField(upload_to='redist/nx/', null=True)
 
+    def __str__(self):
+        return self.title
+
 
 class Redistrcting(models.Model):
     id = models.UUIDField(primary_key = True, default=uuid.uuid4, editable=False)
