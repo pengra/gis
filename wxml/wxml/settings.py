@@ -25,7 +25,7 @@ SECRET_KEY = 'b7cqrtzn=g$-fl5p9_5#98+uerh5koy40#s1hef29u$%4@vxp*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['pengra.io']
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'states'
 ]
 
