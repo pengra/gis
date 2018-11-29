@@ -7,6 +7,7 @@ import fiona
 import os
 import json
 import csv
+import networkx
 from glob import glob
 import zipfile
 from shapely.geometry import shape
@@ -81,7 +82,7 @@ class Command(BaseCommand):
 
         # os.rmdir(TMP_UNZIP, ignore_errors=True)
 
-        with open(shape_file, 'rb') as handle:
+        with open(zip_location, 'rb') as handle:
             state.voting_shape_file = File(handle)
             state.save()
 
@@ -94,6 +95,10 @@ class Command(BaseCommand):
             csv_handle = csv.reader(os_handle)
             next(csv_handle)
             bg_vtd_map = {blockid: vtd for (blockid, countyid, vtd) in csv_handle}
+
+        with open(zip_location, 'rb') as handle:
+            state.block_dictionary = File(handle)
+            state.save()
 
         state = State.objects.get(id=state_fips)
         zip_location = download_file("{api}tabblock2010_{fips}_pophu.zip".format(api=BG_DATASOURCE, fips=state_fips))
@@ -119,6 +124,10 @@ class Command(BaseCommand):
 
         bar.finish()
 
+        with open(zip_location, 'rb') as handle:
+            state.block_shape_file = File(handle)
+            state.save()
+
     def _create_state_db(self, state_fips, code, name):
         new_state = State(
             id=state_fips,
@@ -139,9 +148,37 @@ class Command(BaseCommand):
         state.fast_visualization = None
         state.save()
 
+    def _create_graph(self, state_fips):
+        graph = networkx.Graph()
+        
+        state = State.objects.get(id=state_fips)
+        polygons = StateSubsection.objects.filter(state=state)
+
+        bar = IncrementalBar("Creating Graph Representation (Step 1: Nodes)", max=len(polygons))
+
+        # Create Nodes
+        for i, precinct in enumerate(polygons):
+            bar.next()
+            graph.add_node(precinct.id)
+        
+        bar.finish()
+
+        # Create Edges
+        bar = IncrementalBar("Creating Graph Representation (Step 2: Edges)", max=len(polygons))
+
+        for i, precinct in enumerate(polygons):
+            for neighbor in polygons.filter(poly__touches=precinct.poly):
+                graph.add_edge(precinct.id, neighbor.id)
+            
+            bar.next()
+
+        bar.finish()
+            
+
     def handle(self, *args, **options):
-        self._create_state_db(options['state_fips'], options['state_code'], options['state_name'])
-        self._load_vtd(options['state_fips'])
-        self._load_bg_vtd_map(options['state_fips'])
-        self._set_populations(options['state_fips'])
+        # self._create_state_db(options['state_fips'], options['state_code'], options['state_name'])
+        # self._load_vtd(options['state_fips'])
+        # self._load_bg_vtd_map(options['state_fips'])
+        # self._set_populations(options['state_fips'])
+        self._create_graph(options['state_fips'])
 

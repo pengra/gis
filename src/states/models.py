@@ -20,11 +20,12 @@ class State(models.Model):
     code = models.CharField(max_length=2, unique=True)
     name = models.CharField(max_length=100, unique=True)
 
-    voting_shape_file = models.FileField(null=True)
-    block_shape_file = models.FileField(null=True)
-    block_dictionary = models.FileField(null=True)
+    voting_shape_file = models.FileField(upload_to='state/shp/vtd/', null=True)
+    block_shape_file = models.FileField(upload_to='state/shp/bg/', null=True)
+    block_dictionary = models.FileField(upload_to='state/map/pop/', null=True)
+    graph_representation = models.FileField(upload_to='state/nx/', null=True)
 
-    fast_visualization = models.ImageField(null=True)
+    fast_visualization = models.ImageField(upload_to='state/img/', null=True)
 
     def __str__(self):
         return self.name
@@ -73,10 +74,14 @@ class CensusBlock(models.Model):
 class SeedRedistrictMap(models.Model):
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255)
+
+    districts = models.IntegerField()
+
     state = models.ForeignKey(State, on_delete=models.CASCADE)
 
-    initial_visualization = models.ImageField()
-    initial_file = models.FileField()
+    initial_visualization = models.ImageField(upload_to='redist/img/', null=True)
+    initial_file = models.FileField(upload_to='redist/shp/', null=True)
 
 
 class Redistrcting(models.Model):
@@ -85,8 +90,17 @@ class Redistrcting(models.Model):
 
     initial = models.ForeignKey(SeedRedistrictMap, on_delete=models.CASCADE)
     
-    visualization = models.ImageField()
-    shape_file = models.FileField()
+    multi_polygon_behavior = models.CharField(
+        choices=(
+            ('accept', "Treat Multipolygons as polygons"),
+            ('tear', "Break apart Multipolygons and combine them again post simulation")
+            ('convexhull', "Clump all polygons that are in the convex hull of a multipolygon")
+        ),
+        max_length=len('convexhull')
+    )
+
+    visualization = models.ImageField(upload_to='redist/img/')
+    shape_file = models.FileField(upload_to='redist/shp/')
 
     steps = models.IntegerField(default=0)
     total_runtime = models.FloatField(default=0)

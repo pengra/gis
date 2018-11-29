@@ -2,13 +2,35 @@ from celery.decorators import task
 from descartes import PolygonPatch
 from django.core.files import File
 import random
+import fiona
 
 import matplotlib.pyplot as plt
 
 @task()
-def build_seed_map(state_id):
+def build_seed_map(title, seed, districts, multipolygon, iterations, granularity):
     # Build a seed map
-    pass
+    from states.models import State, SeedRedistrictingMap
+    
+    state_id = int(seed.split("_")[1])
+    state = State.objects.get(id=state_id)
+
+    newSeed = SeedRedistrictingMap(
+        title=title,
+        districts=districts,
+        state=state,
+    )
+
+    shape = fiona.open(state.voting_shape_file.path)
+    
+
+    # Seed the districts
+    # Visualize
+    # Save as shp file
+    # 
+
+    
+
+
 
 @task()
 def run_redistricting_algorithm(seed_id):
