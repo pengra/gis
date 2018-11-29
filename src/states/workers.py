@@ -150,6 +150,6 @@ def seed_districts(graph, districts):
 
     else:
         for node in graph.nodes():
-            graph.nodes.get(node)['district'] = 0
+            graph.nodes.get(node)['district'] = 1
     
     return graph
