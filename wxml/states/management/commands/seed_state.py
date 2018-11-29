@@ -70,6 +70,7 @@ class Command(BaseCommand):
                 water_mass=properties['AWATER10'],
                 perimeter=shape(geometry).length,
                 area=shape(geometry).area,
+                poly=shape(geometry)
             )
             newSubsection.save()
             bar.next()
