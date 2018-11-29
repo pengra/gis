@@ -31,7 +31,8 @@ class State(models.Model):
 
     def save(self, *args, **kwargs):
         parent_save = super().save(*args, **kwargs)
-        visualize_map.delay(self.id)
+        if not self.fast_visualization:
+            visualize_map.delay(self.id)
         return parent_save
 
 
@@ -54,7 +55,7 @@ class StateSubsection(models.Model):
 
     poly = gis_models.GeometryField(geography=True)
 
-    population = models.BigIntegerField()
+    population = models.BigIntegerField(null=True)
 
     def __str__(self):
         return self.name

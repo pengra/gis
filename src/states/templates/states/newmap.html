@@ -14,6 +14,12 @@
     <div class="container">
         
         <form method="POST">
+
+        <div class="form-group">
+            <img id="fast-visualization" class="img-fluid" src="/{{states.0.fast_visualization.url}}">
+        </div>
+
+
         <div class="form-group">
             <label>Map Name</label>
             <input name="title" type="text" class="form-control" placeholder="E.g. Washington Run #12">
@@ -22,11 +28,10 @@
         <div class="form-group">
 
         <label>Seed Map</label>
-        <select name="state" class="form-control">
+        <select name="state" class="form-control" onChange="document.getElementById('fast-visualization').src = '/' +  event.target.value.split('|')[1]">
             {% for state in states %}
                 <option 
-                    value="new_{{state.id}}"
-                    onclick="alert('{{state_id}}');"
+                    value="new_{{state.id}}_|{{state.fast_visualization.url}}"
                 >New Map: {{ state.name }}</option>
             {% endfor %}
             {% for map in maps %}
