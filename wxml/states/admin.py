@@ -34,5 +34,11 @@ class VTDAdmin(admin.ModelAdmin):
         'area'
     )
 
+class CensusAdmin(admin.ModelAdmin):
+    list_display = ('id', 'subsection', 'population', 'housing_units')
+    search_fields = ('id', 'subsection')
+    
+
 admin.site.register(models.State, StateAdmin)
 admin.site.register(models.StateSubsection, VTDAdmin)
+admin.site.register(models.CensusBlock, CensusAdmin)

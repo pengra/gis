@@ -58,6 +58,8 @@ class CensusBlock(models.Model):
     population = models.IntegerField() #POP10
     housing_units = models.IntegerField() #HOUSING10
 
+    def __str__(self):
+        return str(self.id)
 
 class SeedRedistrictMap(models.Model):
     
