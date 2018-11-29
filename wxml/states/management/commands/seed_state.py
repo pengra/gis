@@ -5,6 +5,7 @@ import networkx
 import requests
 import fiona
 import os
+import json
 import csv
 from glob import glob
 import zipfile
@@ -71,7 +72,7 @@ class Command(BaseCommand):
                 water_mass=properties['AWATER10'],
                 perimeter=shape(geometry).length,
                 area=shape(geometry).area,
-                poly=GEOSGeometry(geometry)
+                poly=GEOSGeometry(json.dumps(geometry))
             )
             newSubsection.save()
             bar.next()
