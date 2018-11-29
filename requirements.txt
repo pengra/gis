@@ -1,4 +1,7 @@
+amqp==2.3.2
 attrs==18.2.0
+billiard==3.5.0.4
+celery==4.2.1
 certifi==2018.10.15
 chardet==3.0.4
 Click==7.0
@@ -14,6 +17,7 @@ GDAL==2.2.3
 geopandas==0.4.0
 idna==2.7
 kiwisolver==1.0.1
+kombu==4.2.1
 matplotlib==3.0.2
 munch==2.3.2
 networkx==2.2
@@ -23,6 +27,7 @@ pandas==0.23.4
 Pillow==5.3.0
 pkg-resources==0.0.0
 progress==1.4
+psycopg2==2.7.6.1
 pyparsing==2.3.0
 pyproj==1.9.5.1
 python-dateutil==2.7.5
@@ -32,3 +37,4 @@ Rtree==0.8.3
 Shapely==1.6.4.post2
 six==1.11.0
 urllib3==1.24.1
+vine==1.1.4
