@@ -31,7 +31,8 @@ class VTDAdmin(admin.ModelAdmin):
         'land_mass',
         'water_mass',
         'perimeter',
-        'area'
+        'area',
+        'population',
     )
 
 class CensusAdmin(admin.ModelAdmin):
