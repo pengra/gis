@@ -5,6 +5,8 @@ import random
 import fiona
 import networkx
 
+from progress.bar import IncrementalBar
+
 import matplotlib.pyplot as plt
 
 @task()
