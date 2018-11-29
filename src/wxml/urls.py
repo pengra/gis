@@ -17,9 +17,10 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
 from states.views import NewMapView
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='states/maps.html')),
     path('new/', NewMapView.as_view()),
-]
+] + static('/visuals/', document_root='visuals/') + static('/raws/', document_root='raws/')
