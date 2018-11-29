@@ -35,6 +35,7 @@ class VTDAdmin(admin.ModelAdmin):
         'population',
     )
 
+
 class CensusAdmin(admin.ModelAdmin):
     list_display = ('id', 'subsection', 'population', 'housing_units')
     search_fields = ('id', 'subsection')
