@@ -52,7 +52,7 @@ class Command(BaseCommand):
         state = State.objects.get(id=state_fips)
         zip_location = download_file("{api}tl_2012_{fips}_vtd10.zip".format(api=VTD_DATASOURCE, fips=state_fips))
         unzip_file(zip_location)
-        shape_file = glob(TMP_UNZIP + "*.shp")[0]
+        shape_file = glob(TMP_UNZIP + "*vtd10.shp")[0]
         polygons = fiona.open(shape_file)
 
         bar = IncrementalBar("Loading Voting Districts", max=len(polygons))
@@ -98,7 +98,7 @@ class Command(BaseCommand):
         state = State.objects.get(id=state_fips)
         zip_location = download_file("{api}tabblock2010_{fips}_pophu.zip".format(api=BG_DATASOURCE, fips=state_fips))
         unzip_file(zip_location)
-        shape_file = glob(TMP_UNZIP + "*.shp")[0]
+        shape_file = glob(TMP_UNZIP + "*pophu.shp")[0]
         polygons = fiona.open(shape_file)
 
         bar = IncrementalBar("Loading census population data", max=len(polygons))
