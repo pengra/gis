@@ -39,7 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
-    'states'
+    # Plugins
+    'django_celery_results',
+    # My apps
+    'states',
 ]
 
 MIDDLEWARE = [

@@ -1,12 +1,14 @@
+from __future__ import absolute_import
+
 import os
 from celery import Celery
 from wxml import settings
 
-app = Celery('wxml')
-
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'wxml.settings')
 
-app.config_from_object('django.conf:settings', namespace='CELERY')
+app = Celery('wxml')
+
+app.config_from_object('django.conf:settings')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
 @app.task(bind=True)
