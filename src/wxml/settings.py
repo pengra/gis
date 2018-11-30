@@ -20,10 +20,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'b7cqrtzn=g$-fl5p9_5#98+uerh5koy40#s1hef29u$%4@vxp*'
+SECRET_KEY = os.getenv('SECRET_KEY', 'b7cqrtzn=g$-fl5p9_5#98+uerh5koy40#s1hef29u$%4@vxp*')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG_MODE', False)
 
 LOCAL_HOST = '127.0.0.1'
 ALLOWED_HOSTS = ['pengra.io', LOCAL_HOST]
@@ -130,9 +130,34 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = './static/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = './media/'
 
 # Celery Integration (Worker Roles!)
 # https://simpleisbetterthancomplex.com/tutorial/2017/08/20/how-to-use-celery-with-django.html
 
 CELERY_BROKER_URL = 'amqp://' + LOCAL_HOST
 CELERY_RESULT_BACKEND = 'django-db'
+
+# HTTPS
+# https://docs.djangoproject.com/en/2.1/ref/middleware/#http-strict-transport-security
+
+SECURE_HSTS_SECONDS = 0 if DEBUG else 31536000
+SECURE_HSTS_PRELOAD = not DEBUG
+SECURE_PROXY_SSL_HEADER = None if DEBUG else (
+    'HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_SSL_REDIRECT = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SECURE_CONTENT_TYPE_NOSNIFF = not DEBUG
+SECURE_BROWSER_XSS_FILTER = not DEBUG
+X_FRAME_OPTIONS = 'DENY'
+
+# Email
+# https://gist.github.com/raelgc/6031274
+SERVER_EMAIL = 'root@localhost'
+ADMINS = [('qwergram', 'qwergram@localhost')]
+MANAGERS = ADMINS
