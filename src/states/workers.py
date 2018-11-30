@@ -32,6 +32,12 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
 
     
     graph = seed_districts(graph, districts)
+
+    if nonprecinct == 'postdrop':
+        nonprecincts = StateSubsection.objects.filter(state=state, is_precinct=False)
+        for nonprecinct in nonprecincts:
+            graph.remove_node(nonprecinct.id)
+
     visual_path = "visuals/STATE_{}_nx.png".format(state_id)
     figure = plt.figure()
     axis = figure.gca()
