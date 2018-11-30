@@ -26,7 +26,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'b7cqrtzn=g$-fl5p9_5#98+uerh5koy40#s1hef29u
 DEBUG = os.getenv('DEBUG_MODE', False)
 
 LOCAL_HOST = '127.0.0.1'
-ALLOWED_HOSTS = ['pengra.io', LOCAL_HOST]
+ALLOWED_HOSTS = ['gis.pengra.io', LOCAL_HOST]
 
 
 # Application definition
