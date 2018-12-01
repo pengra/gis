@@ -121,7 +121,7 @@ class SeedRedistrictMap(models.Model):
         return self.title
 
 
-class Redistrcting(models.Model):
+class Redistricting(models.Model):
     id = models.UUIDField(primary_key = True, default=uuid.uuid4, editable=False)
     queue_index = models.IntegerField(default=1, editable=False)
 
