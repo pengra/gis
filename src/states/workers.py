@@ -21,7 +21,12 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
         title=title,
         districts=districts,
         state=state,
+        multi_polygon_behavior=multipolygon,
+        nonprecinct_behavior=nonprecinct,
+        status='seeding',
     )
+    
+    newSeed.save()
 
     graph = networkx.read_gpickle(state.graph_representation.path)
 
@@ -37,6 +42,9 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
         nonprecincts = StateSubsection.objects.filter(state=state, is_precinct=False)
         for nonprecinct in nonprecincts:
             graph.remove_node(nonprecinct.id)
+
+    newSeed.status = 'visualizing'
+    newSeed.save()
 
     visual_path = "visuals/STATE_{}_nx.png".format(state_id)
     figure = plt.figure()
@@ -59,6 +67,9 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
         newSeed.initial_visualization = File(handle)
         newSeed.initial_file = state.graph_representation
         newSeed.save()
+
+    newSeed.status = 'idle'
+    newSeed.save()
 
 
 @task()

@@ -82,6 +82,40 @@ class SeedRedistrictMap(models.Model):
 
     initial_visualization = models.ImageField(upload_to='redist/img/', null=True)
     initial_file = models.FileField(upload_to='redist/nx/', null=True)
+    shape = models.FileField(upload_to='redist/shp/', null=True)
+    matrix_map = models.FileField(upload_to='redist/txt/', null=True)
+
+    nonprecinct_behavior = models.CharField(
+        choices=(
+            ('predrop', "Drop the non-precincts before creating an adjacency graph"),
+            ('postdrop', "Drop the non-precincts after creating an adjacency graph and bridge the gaps"),
+            ('ignore', "Treat non-precinct polygons like precinct polygons")
+        ),
+        max_length=8,
+        default='ignore'
+    )
+
+    status = models.CharField(
+        choices=(
+            ("idle", "Idle"),
+            ("queued", "Queued"),
+            ("seeding", "Building Seed Map"),
+            ("running", "Running Weifan's code"),
+            ("visualizing", "Visualization via Zack's code"),
+            ("statistic", "Statistical tests via Langley's code"),
+        ),
+        max_length=11,
+        default="idle"
+    )
+
+    multi_polygon_behavior = models.CharField(
+        choices=(
+            ('accept', "Treat Multipolygons as polygons"),
+            ('tear', "Break apart Multipolygons and combine them again post simulation"),
+            ('convexhull', "Clump all polygons that are in the convex hull of a multipolygon"),
+        ),
+        max_length=len('convexhull')
+    )
 
     def __str__(self):
         return self.title
@@ -102,8 +136,10 @@ class Redistrcting(models.Model):
         max_length=len('convexhull')
     )
 
-    visualization = models.ImageField(upload_to='redist/img/')
-    shape_file = models.FileField(upload_to='redist/shp/')
+    visualization = models.ImageField(upload_to='redist/img/', null=True)
+    graph = models.FileField(upload_to='redist/nx/', null=True)
+    shape_file = models.FileField(upload_to='redist/shp/', null=True)
+    matrix_map = models.FileField(upload_to='redist/txt/', null=True)
 
     steps = models.IntegerField(default=0)
     total_runtime = models.FloatField(default=0)

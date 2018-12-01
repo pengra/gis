@@ -16,11 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
-from states.views import NewMapView, ExistingMapsView
+from states.views import NewMapView, ExistingMapsView, SeedDetailView
 from django.conf.urls.static import static
+from wxml.settings import DEBUG
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', ExistingMapsView.as_view()),
     path('new/', NewMapView.as_view()),
-] + static('/visuals/', document_root='visuals/') + static('/raws/', document_root='raws/') + static('/redist/', document_root='redist/')
+    path('map/<uuid:id>/', SeedDetailView.as_view()),
+]
+
+
+if DEBUG:
+    urlpatterns += static('/visuals/', document_root='visuals/') + static('/raws/', document_root='raws/') + static('/redist/', document_root='redist/')
