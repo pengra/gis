@@ -72,7 +72,7 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
         newSeed.initial_visualization = File(handle)
         newSeed.save()
 
-    with open(graph_path, 'wb') as handle:
+    with open(graph_path, 'rb') as handle:
         newSeed.initial_file = File(handle)
         newSeed.save()
 
