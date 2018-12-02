@@ -65,8 +65,8 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
             polygon = StateSubsection.objects.get(id=precinct).poly
             axis.add_patch(PolygonPatch(polygon, fc=layer_color, ec=layer_color, linewidth=0.8, alpha=0.5, zorder=2))
 
-    axis.axis('off')
-    plt.savefig(visual_path, dpi=50)
+    axis.axis('scaled')
+    plt.savefig(visual_path, dpi=300)
 
     with open(visual_path, 'rb') as handle:
         newSeed.initial_visualization = File(handle)
