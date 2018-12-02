@@ -141,7 +141,7 @@ def visualize_map(state_id):
         axis.add_patch(PolygonPatch(polygon, fc=color, ec=color, alpha=0.5, zorder=2))
 
     axis.axis('scaled')
-    plt.savefig(visual_path, dpi=300)
+    plt.savefig(visual_path, dpi=20)
 
     with open(visual_path, 'rb') as handle:
         state.fast_visualization = File(handle)
