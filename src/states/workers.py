@@ -97,10 +97,12 @@ def build_weifan_export(seed_id):
 
     with open(csv_path, "w", newline='') as os_handle:
         csv_handle = csv.writer(os_handle, delimiter=',', quoting=csv.QUOTE_MINIMAL)
-        csv_handle.writerow(["US_GEO_ID", "DISTRICT_ID"])
+        csv_handle.writerow(["US_GEO_ID", "OBJECT_ID", "DISTRICT_ID"])
         for node, data in graph.nodes(data=True):
+            precinct = StateSubsection.objects.get(id=node)
             if data.get('district'):
-                csv_handle.writerow([StateSubsection.objects.get(id=node).geo_id, data['district']])
+                if multi_id in precinct.multi_ids:
+                    csv_handle.writerow([multi_id, data['district']])
     
     with open(csv_path, "r") as handle:
         seed.matrix_map = File(handle)

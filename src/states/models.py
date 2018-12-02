@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.contrib.gis.db import models as gis_models
+from django.contrib.postgres.fields import ArrayField
 from states.workers import visualize_map
 
 # Create your models here.
@@ -40,6 +41,7 @@ class State(models.Model):
 class StateSubsection(models.Model):
 
     id = models.CharField(primary_key=True, max_length=255, unique=True) # vtdst10
+    multi_ids = models.ArrayField(models.IntegerField(), size=10, null=True, help_text="IDs of each polygon inside. Ordered by smallest to largest polygon.")
     state = models.ForeignKey(State, on_delete=models.CASCADE)
     
     name = models.CharField(max_length=255) #namelsad10. Is not necessarily unique.
