@@ -66,7 +66,6 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
             axis.add_patch(PolygonPatch(polygon, fc=layer_color, ec=layer_color, linewidth=0.8, alpha=0.5, zorder=2))
 
     axis.axis('off')
-    axis.annotate('Source: UW WXML, 2018')
     plt.savefig(visual_path, dpi=50)
 
     with open(visual_path, 'rb') as handle:
