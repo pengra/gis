@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView
 from states.models import State, SeedRedistrictMap, Redistricting
 from states.forms import BuildNewMapForm
@@ -40,7 +40,7 @@ class SeedDetailView(TemplateView):
 
     def get_context_data(self, id, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['seed'] = SeedRedistrictMap.objects.get(id=id)
+        context['seed'] = get_object_or_404(SeedRedistrictMap, id=id)
         context['redistrictings'] = Redistricting.objects.get(initial=context['seed']).order_by('queue_index')
         context['latest'] = context['redistrictings'][-1]
         context['total_steps'] = sum([redistricting.steps for redistricting in context['redistrictings']])
