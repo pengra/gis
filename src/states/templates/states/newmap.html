@@ -35,7 +35,11 @@
         <select name="seed" class="form-control" onChange="document.getElementById('fast-visualization').src = event.target.value.split('|')[1]">
             {% for state in states %}
                 <option 
+                    {% if state.fast_visualizatoin %}
                     value="new_{{state.id}}_|{{state.fast_visualization.url}}"
+                    {% else %}
+                    value="new_{{state.id}}_|{% static 'states/default.svg' %}"
+                    {% endif %}
                 >New Map: {{ state.name }}</option>
             {% endfor %}
             {% for map in maps %}

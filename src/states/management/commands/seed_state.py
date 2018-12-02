@@ -138,8 +138,8 @@ class Command(BaseCommand):
 
     def _set_populations(self, state_fips):
         state = State.objects.get(id=state_fips)
-        bar = IncrementalBar("Applying census population data", max=len(State.objects.all()))
-        for subsection in StateSubsection.objects.all():
+        bar = IncrementalBar("Applying census population data", max=len(StateSubsection.objects.filter(state=state)))
+        for subsection in StateSubsection.objects.filter(state=state):
             bar.next()
             subsection.population = sum([_.population for _ in CensusBlock.objects.filter(subsection=subsection)])
             subsection.save()

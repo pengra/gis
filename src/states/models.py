@@ -58,6 +58,10 @@ class StateSubsection(models.Model):
 
     population = models.BigIntegerField(null=True)
 
+    @property
+    def geo_id(self):
+        return "{}{}{}".format(self.state.id, self.county, self.id)
+
     def __str__(self):
         return self.name
 

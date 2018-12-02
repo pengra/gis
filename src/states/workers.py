@@ -4,6 +4,7 @@ from django.core.files import File
 import random
 import fiona
 import networkx
+import csv
 
 from progress.bar import IncrementalBar
 
@@ -47,6 +48,10 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
     newSeed.save()
 
     visual_path = "visuals/STATE_{}_nx.png".format(state_id)
+    graph_path = "nx/STATE_{}.nx".format(state_id)
+    
+    networkx.write_gpickle(graph, graph_path)
+
     figure = plt.figure()
     axis = figure.gca()
 
@@ -65,11 +70,43 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
 
     with open(visual_path, 'rb') as handle:
         newSeed.initial_visualization = File(handle)
-        newSeed.initial_file = state.graph_representation
+        newSeed.save()
+
+    with open(graph_path, 'wb') as handle:
+        newSeed.initial_file = File(handle)
         newSeed.save()
 
     newSeed.status = 'idle'
     newSeed.save()
+
+@task()
+def build_weifan_export(seed_id):
+    # Build weifan's export
+    
+    from states.models import SeedRedistrictMap, StateSubsection
+    
+    seed = SeedRedistrictMap.objects.get(id=seed_id)
+
+    seed.status = 'visualizing'
+    seed.save()
+
+    graph = networkx.read_gpickle(seed.initial_file.path)
+
+    csv_path = "visuals/{}.weifan.csv".format(seed_id)
+
+    with open(csv_path, "w", newline='') as os_handle:
+        csv_handle = csv.writer(os_handle, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+        csv_handle.writerow(["US_GEO_ID", "DISTRICT_ID"])
+        for node, data in graph.nodes(data=True):
+            if data.get('district'):
+                csv_handle.writerow([StateSubsection.objects.get(id=node).geo_id, data['district']])
+    
+    with open(csv_path, "r") as handle:
+        seed.matrix_map = File(handle)
+        seed.save()
+
+    seed.status = 'idle'
+    seed.save()
 
 
 @task()
@@ -77,10 +114,6 @@ def run_redistricting_algorithm(seed_id):
     # Build a redistricting given a seed_id
     pass
 
-@task()
-def visualize_seed(seed_id):
-    # Visualize a seed_map
-    pass
 
 @task()
 def visualize_map(state_id):
