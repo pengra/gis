@@ -39,7 +39,7 @@ class SeedDetailView(TemplateView):
     template_name = 'states/mapdetail.html'
 
     def get_context_data(self, id, **kwargs):
-        context = super().get_context_data(id, **kwargs)
+        context = super().get_context_data(**kwargs)
         context['seed'] = SeedRedistrictMap.objects.get(id=id)
         context['redistrictings'] = Redistricting.objects.get(initial=context['seed']).order_by('queue_index')
         context['latest'] = context['redistrictings'][-1]
