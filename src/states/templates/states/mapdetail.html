@@ -103,21 +103,53 @@
             <td>0.0</td>
             <td>0</td>
             <td>{{seed.multi_polygon_behavior}}</td>
+            {% if seed.initial_visualization %}
             <td><a href="{{seed.initial_visualization.url}}" target="_blank">View Image</a></td>
+            {% else %}
+            <td>Visualization Unavailable</td>
+            {% endif %}
+            {% if seed.initial_file %}
             <td><a href="{{seed.initial_file.url}}" target="_blank">Download Graph</a></td>
+            {% else %}
+            <td>Graph Unavailable</td>
+            {% endif %}
+            {% if seed.shape %}
             <td><a href="{{seed.shape.url}}" target="_blank">Download GIS files</a></td>
+            {% else %}
+            <td>Shape Unavailable</td>
+            {% endif %}
+            {% if seed.matrix_map %}
             <td><a href="{{seed.matrix_map.url}}" target="_blank">Download Weifan Format</a></td>
+            {% else %}
+            <td>Weifan Export Unavailable</td>
+            {% endif %}
         </tr>
         {% for redistricting in redistrictings %}
         <tr>
-          <td>{{redistricting.id}}-{{redistricting.queue_index}}</td>
-          <td>{{redistricting.total_runtime}}</td>
-          <td>{{redistricting.steps}}</td>
-          <td>{{redistricting.multi_polygon_behavior}}</td>
-          <td><a href="{{redistricting.visualization.url}}" target="_blank">View Image</a></td>
-          <td><a href="{{redistricting.graph.url}}" target="_blank">Download Graph</a></td>
-          <td><a href="{{redistricting.shape_file.url}}" target="_blank">Download GIS files</a></td>
-          <td><a href="{{redistricting.matrix_map.url}}" target="_blank">Download Weifan Format</a></td>
+            <td>{{redistricting.id}}-{{redistricting.queue_index}}</td>
+            <td>{{redistricting.total_runtime}}</td>
+            <td>{{redistricting.steps}}</td>
+            <td>{{redistricting.multi_polygon_behavior}}</td>
+            {% if redistricting.visualization %}
+            <td><a href="{{redistricting.visualization.url}}" target="_blank">View Image</a></td>
+            {% else %}
+            <td>Visualization Unavailable</td>
+            {% endif %}
+            {% if redirecting.graph %}
+            <td><a href="{{redistricting.graph.url}}" target="_blank">Download Graph</a></td>
+            {% else %}
+            <td>Graph Unavailable</td>
+            {% endif %}
+            {% if redistricting.shape_file %}
+            <td><a href="{{redistricting.shape_file.url}}" target="_blank">Download GIS files</a></td>
+            {% else %}
+            <td>GIS files Unavailable</td>
+            {% endif %}
+            {% if redistricting.matrix_map %}
+            <td><a href="{{redistricting.matrix_map.url}}" target="_blank">Download Weifan Format</a></td>
+            {% else %}
+            <td>Weifan Export Unavailable</td>
+            {% endif %}
         </tr>
         {% endfor %}
     </tbody>

@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
 ]
 
 ROOT_URLCONF = 'wxml.urls'
@@ -159,5 +160,4 @@ X_FRAME_OPTIONS = 'DENY'
 # Email
 # https://gist.github.com/raelgc/6031274
 SERVER_EMAIL = 'root@localhost'
-ADMINS = [('qwergram', 'qwergram@localhost')]
-MANAGERS = ADMINS
+MANAGERS = ADMINS = [('qwergram', 'qwergram@localhost'), ('root', 'root@localhost')]
