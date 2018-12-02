@@ -52,7 +52,7 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
     
     networkx.write_gpickle(graph, graph_path)
 
-    figure = plt.figure()
+    figure = plt.figure(figsize=(15,15)) # 15 by 15 inch image
     axis = figure.gca()
 
     for district in range(districts):
@@ -63,10 +63,11 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
     
         for precinct in layer:
             polygon = StateSubsection.objects.get(id=precinct).poly
-            axis.add_patch(PolygonPatch(polygon, fc=layer_color, ec=layer_color, alpha=0.5, zorder=2))
+            axis.add_patch(PolygonPatch(polygon, fc=layer_color, ec=layer_color, linewidth=0.8, alpha=0.5, zorder=2))
 
-    axis.axis('scaled')
-    plt.savefig(visual_path, dpi=300)
+    axis.axis('off')
+    axis.annotate('Source: UW WXML, 2018')
+    plt.savefig(visual_path, dpi=50)
 
     with open(visual_path, 'rb') as handle:
         newSeed.initial_visualization = File(handle)
@@ -79,7 +80,8 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
     newSeed.status = 'idle'
     newSeed.save()
 
-@task()
+    build_weifan_export(newSeed.id)
+
 def build_weifan_export(seed_id):
     # Build weifan's export
     
