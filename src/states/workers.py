@@ -48,7 +48,7 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
     newSeed.save()
 
     visual_path = "visuals/STATE_{}_nx.png".format(state_id)
-    graph_path = "nx/STATE_{}.nx".format(state_id)
+    graph_path = "visuals/STATE_{}.nx".format(state_id)
     
     networkx.write_gpickle(graph, graph_path)
 
