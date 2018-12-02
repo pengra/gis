@@ -41,7 +41,7 @@ class SeedDetailView(TemplateView):
     def get_context_data(self, id, **kwargs):
         context = super().get_context_data(**kwargs)
         context['seed'] = get_object_or_404(SeedRedistrictMap, id=id)
-        context['redistrictings'] = Redistricting.objects.get(initial=context['seed']).order_by('queue_index')
+        context['redistrictings'] = Redistricting.objects.filter(initial=context['seed']).order_by('queue_index')
         context['latest'] = context['redistrictings'][-1]
         context['total_steps'] = sum([redistricting.steps for redistricting in context['redistrictings']])
         context['total_runtime'] = sum([redistricting.total_runtime for redistricting in context['redistrictings']])
