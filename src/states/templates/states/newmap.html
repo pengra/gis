@@ -39,7 +39,7 @@
                 >New Map: {{ state.name }}</option>
             {% endfor %}
             {% for map in maps %}
-                <option value="old_{{map.id}}_|{{map.initial_visualization.url}}">Seed Map: {{ map.title }} ({{map.districts}} Districts)</option>
+                <!-- <option value="old_{{map.id}}_|{{map.initial_visualization.url}}">Seed Map: {{ map.title }} ({{map.districts}} Districts)</option> -->
             {% endfor %}
         </select>
         <small class="form-text text-muted">Which map do you want to run a simulation on?</small>
@@ -54,9 +54,9 @@
         <div class="form-group">
         <label>Multi Polygon Graph Edge Behavior</label>
         <select name="multipolygon" class="form-control">
-            <option value="accept">Treat Multipolygon as Polygons (May result in strange visualizations)</option>
+            <!-- <option value="accept">Treat Multipolygon as Polygons (May result in strange visualizations)</option> -->
             <option value="tear">Break apart Multipolygons and combine them again post simulation</option>
-            <option value="convexhull">Clump all polygons that are in the convex hull of a multiplolygon and treat it as one polygon.</option>
+            <!-- <option value="convexhull">Clump all polygons that are in the convex hull of a multiplolygon and treat it as one polygon.</option> -->
         </select>
         <small class="form-text text-muted">How to handle multi-polygons districts.</small>
         </div>
@@ -70,8 +70,9 @@
 	</select>
 	<small class="form-text text-muted">How to handle non-precinct polygons.</small>
 	</div>
-
-        <div class="form-group">
+        <input type="hidden" name="iterations" value="1"/>
+        <input type="hidden" name="granularity" value="1"/>
+        <!-- <div class="form-group">
             <label>Iterations of Simulation</label>
             <input name="iterations" type="number" class="form-control" placeholder="E.g. 50000">
             <small class="form-text text-muted">How many iterations to put the map through</small>
@@ -81,7 +82,7 @@
             <label>Granularity</label>
             <input name="granularity" type="number" class="form-control" placeholder="E.g. 20">
             <small class="form-text text-muted">How many precincts to clump together to speed simulations.</small>
-        </div>
+        </div> -->
         
         <button type="submit" class="btn btn-primary">Submit</button>
         </form>
@@ -91,3 +92,4 @@
 
 </main>
 {% endblock %}
+

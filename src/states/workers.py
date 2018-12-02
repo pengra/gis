@@ -103,9 +103,6 @@ def visualize_map(state_id):
 
     for precinct in precincts:
         polygon = precinct.poly
-
-        # from celery.contrib import rdb; rdb.set_trace()
-
         axis.add_patch(PolygonPatch(polygon, fc=color, ec=color, alpha=0.5, zorder=2))
 
     axis.axis('scaled')

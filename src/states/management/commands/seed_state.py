@@ -166,11 +166,34 @@ class Command(BaseCommand):
         # Create Edges
         bar = IncrementalBar("Creating Graph Representation (Step 2: Edges)", max=len(polygons))
 
+        def get_largest_polygon(multipolygon):
+            polygons = [p for p in multipolygon]
+            areas = [p.area for p in multipolygon]
+            largest_polygon = -1
+            return_polygon = polygons[0]
+            for i, area in enumerate(areas):
+                if area > largest_polygon:
+                    return_polygon = polygons[i]
+                    largest_polygon = area
+            return return_polygon
+
         for i, precinct in enumerate(polygons):
+            if precinct.multi_polygon:
+                precinct_poly = get_largest_polygon(precinct.poly)    
+            else:
+                precinct_poly = precinct.poly
+                
             for j, neighbor in enumerate(polygons):
-                if j <= i: continue
-                if neighbor.poly.touches(precinct.poly):
+                if j <= i: 
+                    continue
+                elif neighbor.multi_polygon:
+                    neighbor_poly = get_largest_polygon(neighbor.poly)
+                else:
+                    neighbor_poly = neighbor.poly
+
+                if neighbor_poly.touches(precinct_poly):
                      graph.add_edge(precinct.id, neighbor.id)
+
             bar.next()
 
         bar.finish()
