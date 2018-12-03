@@ -277,7 +277,7 @@ def seed_districts(graph, districts, newSeed):
                 for node, props in graph.nodes(data=True): 
                     if props.get('district') == district:
                         # Iterate through edges and find an unclaimed neighbor
-                        for _, neighbor in graph.edges(node):
+                        for neighbor in graph.neighbors(node):
                             if neighbor in graph_pool:
                                 graph_pool.remove(neighbor)
                                 district_sizes[i][0] += 1
@@ -286,7 +286,7 @@ def seed_districts(graph, districts, newSeed):
                                 newSeed.save()
                                 graph.nodes.get(neighbor)['district'] = district
                                 round_complete = True
-                                break
+                                # break
                     if round_complete: break # Quicker breaking
                 if round_complete: break # Quicker breaking
 
