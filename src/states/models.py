@@ -130,13 +130,23 @@ class SeedRedistrictMap(models.Model):
         null=True
     )
     
+    @property
+    def next_redist_index(self):
+        return len(Redistricting.objects.filter(initial=self))
+
+    @property
+    def progress_percentage(self):
+        if total_steps:
+            return min(100, current_step * 100 / total_steps)
+        return 0
+
     def __str__(self):
         return self.title
 
 
 class Redistricting(models.Model):
     id = models.UUIDField(primary_key = True, default=uuid.uuid4, editable=False)
-    queue_index = models.IntegerField(default=1, editable=False)
+    queue_index = models.IntegerField(default=0, editable=False)
 
     initial = models.ForeignKey(SeedRedistrictMap, on_delete=models.CASCADE)
     
