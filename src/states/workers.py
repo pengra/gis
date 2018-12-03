@@ -31,13 +31,18 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
 
     graph = networkx.read_gpickle(state.graph_representation.path)
 
+    newSeed.current_step = 0
+    newSeed.total_steps = len(graph)
+    
+    newSeed.save()
+
     if nonprecinct == 'predrop':
         nonprecincts = StateSubsection.objects.filter(state=state, is_precinct=False)
         for nonprecinct in nonprecincts:
             graph.remove_node(nonprecinct.id)
 
     
-    graph = seed_districts(graph, districts)
+    graph = seed_districts(graph, districts, newSeed)
 
     if nonprecinct == 'postdrop':
         nonprecincts = StateSubsection.objects.filter(state=state, is_precinct=False)
@@ -45,6 +50,8 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
             graph.remove_node(nonprecinct.id)
 
     newSeed.status = 'visualizing'
+    newSeed.current_step = 0
+    newSeed.total_steps = len(graph)
     newSeed.save()
 
     visual_path = "visuals/STATE_{}_nx.png".format(state_id)
@@ -64,6 +71,8 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
         for precinct in layer:
             polygon = StateSubsection.objects.get(id=precinct).poly
             axis.add_patch(PolygonPatch(polygon, fc=layer_color, ec=layer_color, linewidth=0.8, alpha=0.5, zorder=2))
+            newSeed.current_step += 1
+            newSeed.save()
 
     axis.axis('scaled')
     plt.savefig(visual_path, dpi=300)
@@ -113,26 +122,37 @@ def build_weifan_export(seed_id):
 
 
 @task()
-def visualize_from_upload(seed_id):
+def visualize_from_upload(redistrict_id):
+    from states.models import Redistricting, StateSubsection
+
+    redistrict = Redistricting.objects.get(id=redistrict_id)
+    seed = redistrict.initial
+
     figure = plt.figure(figsize=(15,15)) # 15 by 15 inch image
     axis = figure.gca()
 
-    for district in range(districts):
-        notated_district = district + 1
-        layer = [node for node, data in graph.nodes(data=True) if data.get('district') == notated_district]
+    visual_path = "visuals/STATE_{}.png".format(state_id)
+
+    district_colors = []
+
+    for district in range(seed.districts):
         layer_color = "#" + str(hex(random.randint(0, int(0xDDDDDD))))[2:]
         layer_color += "0" * (7-len(layer_color)) # to make it 6 digits
-    
-        for precinct in layer:
+        district_colors.append(layer_color)
+
+    with open(redistrict.matrix_map.path, "r") as handle:
+        for row in handle.readlines():
+            precinct, district = row.split(",")
+            district = int(district)
             polygon = StateSubsection.objects.get(id=precinct).poly
-            axis.add_patch(PolygonPatch(polygon, fc=layer_color, ec=layer_color, linewidth=0.8, alpha=0.5, zorder=2))
+            axis.add_patch(PolygonPatch(polygon, fc=district_colors[district], ec=district_colors[district], linewidth=0.8, alpha=0.5, zorder=2))
 
     axis.axis('scaled')
     plt.savefig(visual_path, dpi=300)
 
     with open(visual_path, 'rb') as handle:
-        newSeed.initial_visualization = File(handle)
-        newSeed.save()
+        redistrict.visualization = File(handle)
+        redistrict.save()
 
 
 @task()
@@ -166,7 +186,7 @@ def visualize_map(state_id):
         state.save()
 
 
-def seed_districts(graph, districts):
+def seed_districts(graph, districts, newSeed):
     """
     A simple procedure that selects n random seed nodes (n = number of districts)
     and then selects neighbors of those seeds and claims them to be of the same
@@ -185,6 +205,8 @@ def seed_districts(graph, districts):
         # Start the district with some seeds
         for district in range(1, districts + 1):
             bar.next()
+            newSeed.current_step += 1
+            newSeed.save()
             seed = graph_pool.pop()
             graph.nodes.get(seed)['district'] = district
 
