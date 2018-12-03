@@ -6,6 +6,9 @@ from states.models import State, SeedRedistrictMap, Redistricting
 from states.forms import BuildNewMapForm, VisualizeSimulation
 import json
 
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
 from states.workers import build_seed_map, visualize_from_upload
 
 # Create your views here.
@@ -43,6 +46,7 @@ class ExistingMapsView(TemplateView):
         context['maps'] = SeedRedistrictMap.objects.all()
         return context
 
+@method_decorator(csrf_exempt)
 class SeedDetailView(TemplateView):
     template_name = 'states/mapdetail.html'
 
