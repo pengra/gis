@@ -46,7 +46,7 @@ class ExistingMapsView(TemplateView):
         context['maps'] = SeedRedistrictMap.objects.all()
         return context
 
-@method_decorator(csrf_exempt)
+@method_decorator(csrf_exempt, name='dispatch')
 class SeedDetailView(TemplateView):
     template_name = 'states/mapdetail.html'
 
