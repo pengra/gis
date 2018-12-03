@@ -69,12 +69,15 @@ class SeedDetailView(TemplateView):
                 queue_index=context['seed'].next_redist_index,
                 initial=context['seed'],
                 multi_polygon_behavior=context['seed'].multi_polygon_behavior,
-                matrix_map=form['matrix'],
-                steps=form['steps'],
-                total_runtime=form['runtime'],
+                matrix_map=form.cleaned_data['matrix'],
+                steps=form.cleaned_data['steps'],
+                total_runtime=form.cleaned_data['runtime'],
             )
             newRedistricting.save()
             visualize_from_upload.delay(newRedistricting.id)
+
+        else: 
+            return JsonResponse(form.errors, status=400)
 
         return super().render_to_response(context)
 
