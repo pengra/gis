@@ -106,7 +106,7 @@ def build_weifan_export(seed_id):
 
     with open(csv_path, "w", newline='') as os_handle:
         csv_handle = csv.writer(os_handle, delimiter=',', quoting=csv.QUOTE_MINIMAL)
-        csv_handle.writerow(["US_GEO_ID", "OBJECT_ID", "DISTRICT_ID"])
+        # csv_handle.writerow(["US_GEO_ID", "DISTRICT_ID"])
         for node, data in graph.nodes(data=True):
             csv_handle.writerow([node, data['district']])
     
@@ -202,8 +202,7 @@ def seed_districts(graph, districts, newSeed):
         # Start the district with some seeds
         for district in range(1, districts + 1):
             bar.next()
-            newSeed.current_step += 1
-            newSeed.save()
+            
             seed = graph_pool.pop()
             graph.nodes.get(seed)['district'] = district
 
@@ -223,6 +222,8 @@ def seed_districts(graph, districts, newSeed):
                                 graph_pool.remove(neighbor)
                                 district_sizes[i][0] += 1
                                 bar.next()
+                                newSeed.current_step += 1
+                                newSeed.save()
                                 graph.nodes.get(neighbor)['district'] = district
                                 round_complete = True
                                 break
