@@ -288,7 +288,7 @@ def seed_districts(graph, districts, newSeed):
                                 round_complete = True
                                 # break
                     if round_complete: break # Quicker breaking
-                if round_complete: break # Quicker breaking
+                # if round_complete: break # Quicker breaking
 
             if len(graph_pool) == last_run:
                 for node in graph_pool:
