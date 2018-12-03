@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404
+from django.core import serializers
+from django.http import JsonResponse
 from django.views.generic import TemplateView
 from states.models import State, SeedRedistrictMap, Redistricting
 from states.forms import BuildNewMapForm, VisualizeSimulation
@@ -6,6 +8,11 @@ from states.forms import BuildNewMapForm, VisualizeSimulation
 from states.workers import build_seed_map, visualize_from_upload
 
 # Create your views here.
+
+def avail_maps_json(request):
+    data = serializers.serialize('json', SeedRedistrictMap.objects.all())
+    return JsonResponse(data)
+
 
 class NewMapView(TemplateView):
     template_name = 'states/newmap.html'
