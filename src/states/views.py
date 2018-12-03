@@ -11,7 +11,7 @@ from states.workers import build_seed_map, visualize_from_upload
 
 def avail_maps_json(request):
     data = serializers.serialize('json', SeedRedistrictMap.objects.all())
-    return JsonResponse(data)
+    return JsonResponse(data, safe=False)
 
 
 class NewMapView(TemplateView):
