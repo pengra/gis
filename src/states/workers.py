@@ -124,6 +124,8 @@ def visualize_from_upload(redistrict_id):
 
     redistrict = Redistricting.objects.get(id=redistrict_id)
     seed = redistrict.initial
+    seed.current_step = 0
+    
 
     figure = plt.figure(figsize=(15,15)) # 15 by 15 inch image
     axis = figure.gca()
@@ -138,11 +140,16 @@ def visualize_from_upload(redistrict_id):
         district_colors.append(layer_color)
 
     with open(redistrict.matrix_map.path, "r") as handle:
-        for row in handle.readlines():
+        lines = handle.readlines()
+        total_steps = len(lines)
+        total_steps.save()
+        for row in lines:
             precinct, district = row.split(",")
             district = int(district)
             polygon = StateSubsection.objects.get(id=precinct).poly
             axis.add_patch(PolygonPatch(polygon, fc=district_colors[district], ec=district_colors[district], linewidth=0.8, alpha=0.5, zorder=2))
+            seed.current_step += 1
+            seed.save()
 
     axis.axis('scaled')
     plt.savefig(visual_path, dpi=300)
