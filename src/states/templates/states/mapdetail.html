@@ -5,16 +5,11 @@
     <h1 class="h2">Details: {{ seed.title }}</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
       <div class="btn-group mr-2">
-        <button class="btn btn-sm btn-outline-secondary">Latest Networkx Pickle</button>
-        <button class="btn btn-sm btn-outline-secondary">Latest Shape File</button>
-        <button class="btn btn-sm btn-outline-secondary">Latest Weifan Export</button>
-        <button class="btn btn-sm btn-outline-secondary">Share</button>
+        <a target="_blank" href="{{ seed.initial_file.url }}"><button class="btn btn-sm btn-outline-secondary">Seed for Client</button></a>
       </div>
     </div>
   </div>
 
-  <h2>Details</h2>
-  
   <div class="row">
 
     <div class="col-md-3">

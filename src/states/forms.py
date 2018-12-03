@@ -18,3 +18,15 @@ class BuildNewMapForm(forms.Form):
     )
     iterations = forms.IntegerField()
     granularity = forms.IntegerField()
+
+class VisualizeSimulation(forms.Form):
+    # seed_uuid = forms.CharField() # defined by route
+    multipolygon = forms.ChoiceField(choices=(
+        ('accept', "Treat Multipolygons as polygons"),
+        ('tear', "Break apart Multipolygons and combine them again post simulation"),
+        ('convexhull', "Clump all polygons that are in the convex hull of a multipolygon")
+    ))
+    steps = forms.IntegerField()
+    runtime = forms.FloatField()
+    matrix = forms.FileField()
+

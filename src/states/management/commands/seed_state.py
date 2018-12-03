@@ -154,12 +154,12 @@ class Command(BaseCommand):
         state = State.objects.get(id=state_fips)
         polygons = StateSubsection.objects.filter(state=state)
 
-        bar = IncrementalBar("Creating Graph Representation (Step 1: Nodes)", max=len(polygons))
+        bar = IncrementalBar("Creating Graph Representation (Step 1: Nodes + Population)", max=len(polygons))
 
         # Create Nodes
         for i, precinct in enumerate(polygons):
             bar.next()
-            graph.add_node(precinct.id)
+            graph.add_node(precinct.id, population=precinct.population)
         
         bar.finish()
 

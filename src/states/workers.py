@@ -58,7 +58,7 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
     for district in range(districts):
         notated_district = district + 1
         layer = [node for node, data in graph.nodes(data=True) if data.get('district') == notated_district]
-        layer_color = "#" + str(hex(random.randint(0, int(0xFFFFFF))))[2:]
+        layer_color = "#" + str(hex(random.randint(0, int(0xDDDDDD))))[2:]
         layer_color += "0" * (7-len(layer_color)) # to make it 6 digits
     
         for precinct in layer:
@@ -113,9 +113,26 @@ def build_weifan_export(seed_id):
 
 
 @task()
-def run_redistricting_algorithm(seed_id):
-    # Build a redistricting given a seed_id
-    pass
+def visualize_from_upload(seed_id):
+    figure = plt.figure(figsize=(15,15)) # 15 by 15 inch image
+    axis = figure.gca()
+
+    for district in range(districts):
+        notated_district = district + 1
+        layer = [node for node, data in graph.nodes(data=True) if data.get('district') == notated_district]
+        layer_color = "#" + str(hex(random.randint(0, int(0xDDDDDD))))[2:]
+        layer_color += "0" * (7-len(layer_color)) # to make it 6 digits
+    
+        for precinct in layer:
+            polygon = StateSubsection.objects.get(id=precinct).poly
+            axis.add_patch(PolygonPatch(polygon, fc=layer_color, ec=layer_color, linewidth=0.8, alpha=0.5, zorder=2))
+
+    axis.axis('scaled')
+    plt.savefig(visual_path, dpi=300)
+
+    with open(visual_path, 'rb') as handle:
+        newSeed.initial_visualization = File(handle)
+        newSeed.save()
 
 
 @task()
@@ -142,7 +159,7 @@ def visualize_map(state_id):
         axis.add_patch(PolygonPatch(polygon, fc=color, ec=color, alpha=0.5, zorder=2))
 
     axis.axis('scaled')
-    plt.savefig(visual_path, dpi=20)
+    plt.savefig(visual_path, dpi=300)
 
     with open(visual_path, 'rb') as handle:
         state.fast_visualization = File(handle)
