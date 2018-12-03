@@ -41,7 +41,6 @@ class State(models.Model):
 class StateSubsection(models.Model):
 
     id = models.CharField(primary_key=True, max_length=255, unique=True) # vtdst10
-    multi_ids = models.ArrayField(models.IntegerField(), size=10, null=True, help_text="IDs of each polygon inside. Ordered by smallest to largest polygon.")
     state = models.ForeignKey(State, on_delete=models.CASCADE)
     
     name = models.CharField(max_length=255) #namelsad10. Is not necessarily unique.
@@ -123,6 +122,14 @@ class SeedRedistrictMap(models.Model):
         max_length=len('convexhull')
     )
 
+    current_step = models.BigIntegerField(
+        null=True
+    )
+
+    total_steps = models.BigIntegerField(
+        null=True
+    )
+    
     def __str__(self):
         return self.title
 
