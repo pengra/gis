@@ -5,7 +5,9 @@
     <h1 class="h2">Details: {{ seed.title }}</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
       <div class="btn-group mr-2">
+        {% if seed.initial_file %}
         <a target="_blank" href="{{ seed.initial_file.url }}"><button class="btn btn-sm btn-outline-secondary">Seed for Client</button></a>
+        {% endif %}
       </div>
     </div>
   </div>
