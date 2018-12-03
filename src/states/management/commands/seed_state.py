@@ -167,13 +167,9 @@ class Command(BaseCommand):
         bar = IncrementalBar("Creating Graph Representation (Step 2: Edges)", max=len(polygons))
 
         for i, census_block in enumerate(polygons):
-                
-            for j, neighbor in enumerate(polygons):
-                if j <= i: 
-                    continue
-
-                if census_block.poly.touches(neighbor.poly):
-                     graph.add_edge(census_block.id, neighbor.id)
+            
+            for neighbor in CensusBlock.objects.filter(poly__bboverlaps=census_block.poly):
+                graph.add_edge(census_block.id, neighbor.id)
 
             bar.next()
 

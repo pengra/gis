@@ -41,6 +41,7 @@ class State(models.Model):
 class StateSubsection(models.Model):
 
     id = models.CharField(primary_key=True, max_length=255, unique=True) # vtdst10
+
     state = models.ForeignKey(State, on_delete=models.CASCADE)
     
     name = models.CharField(max_length=255) #namelsad10. Is not necessarily unique.
