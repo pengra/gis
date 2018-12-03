@@ -141,8 +141,8 @@ def visualize_from_upload(redistrict_id):
 
     with open(redistrict.matrix_map.path, "r") as handle:
         lines = handle.readlines()
-        total_steps = len(lines)
-        total_steps.save()
+        seed.total_steps = len(lines)
+        seed.save()
         for row in lines:
             precinct, district = row.split(",")
             district = int(district)
