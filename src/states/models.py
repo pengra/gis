@@ -64,12 +64,12 @@ class StateSubsection(models.Model):
 
 class CensusBlock(models.Model):
 
-    id = models.CharField(primary_key=True, help_text="id", unique=True) #BLOCKID10
+    id = models.CharField(primary_key=True, help_text="id", unique=True, max_length=50) #BLOCKID10
     subsection = models.ForeignKey(StateSubsection, on_delete=models.CASCADE)
     population = models.IntegerField() #POP10
     housing_units = models.IntegerField() #HOUSING10
 
-    poly = gis_models.GeometryField(geography=True)
+    poly = gis_models.GeometryField(geography=True, null=True)
 
     def __str__(self):
         return str(self.id)
