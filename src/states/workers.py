@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 @task()
 def build_seed_map(title, seed, districts, multipolygon, iterations, granularity, nonprecinct):
     # Build a seed map
-    from states.models import State, StateSubsection, SeedRedistrictMap
+    from states.models import State, StateSubsection, SeedRedistrictMap, CensusBlock
     
     state_id = int(seed.split("_")[1])
     state = State.objects.get(id=state_id)
@@ -36,22 +36,24 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
     
     newSeed.save()
 
-    if nonprecinct == 'predrop':
-        nonprecincts = StateSubsection.objects.filter(state=state, is_precinct=False)
-        for nonprecinct in nonprecincts:
-            graph.remove_node(nonprecinct.id)
+    # if nonprecinct == 'predrop':
+    #     nonprecincts = StateSubsection.objects.filter(state=state, is_precinct=False)
+    #     for nonprecinct in nonprecincts:
+    #         graph.remove_node(nonprecinct.id)
 
     
     graph = seed_districts(graph, districts, newSeed)
 
-    if nonprecinct == 'postdrop':
-        nonprecincts = StateSubsection.objects.filter(state=state, is_precinct=False)
-        for nonprecinct in nonprecincts:
-            graph.remove_node(nonprecinct.id)
+    # if nonprecinct == 'postdrop':
+    #     nonprecincts = StateSubsection.objects.filter(state=state, is_precinct=False)
+    #     for nonprecinct in nonprecincts:
+    #         graph.remove_node(nonprecinct.id)
+
+    precincts = StateSubsection.objects.filter(state=state, is_precinct=True)
 
     newSeed.status = 'visualizing'
     newSeed.current_step = 0
-    newSeed.total_steps = len(graph)
+    newSeed.total_steps = len(precincts)
     newSeed.save()
 
     visual_path = "visuals/STATE_{}_nx.png".format(state_id)
@@ -62,17 +64,26 @@ def build_seed_map(title, seed, districts, multipolygon, iterations, granularity
     figure = plt.figure(figsize=(15,15)) # 15 by 15 inch image
     axis = figure.gca()
 
+    layer_colors = []
+
     for district in range(districts):
-        notated_district = district + 1
+        
         layer = [node for node, data in graph.nodes(data=True) if data.get('district') == notated_district]
         layer_color = "#" + str(hex(random.randint(0, int(0xDDDDDD))))[2:]
         layer_color += "0" * (7-len(layer_color)) # to make it 6 digits
+        layer_colors.append(layer_color)
     
-        for precinct in layer:
-            polygon = StateSubsection.objects.get(id=precinct).poly
-            axis.add_patch(PolygonPatch(polygon, fc=layer_color, ec=layer_color, linewidth=0.8, alpha=0.5, zorder=2))
-            newSeed.current_step += 1
-            newSeed.save()
+    for precinct in precincts:
+        district_votes = [0 for i in range(districts)]
+
+        for censusblock in precinct.censusblock_set.all():
+            district_votes[graph.nodes[censusblock.id]['district'] - 1] += 1
+        
+        precinct_district = district_votes.index(max(district_votes))
+        
+        axis.add_patch(PolygonPatch(precinct.poly, fc=layer_colors[precinct_district], ec=layer_color[precinct_district], linewidth=0.8, alpha=0.5, zorder=2))
+        newSeed.current_step += 1
+        newSeed.save()
 
     axis.axis('scaled')
     plt.savefig(visual_path, dpi=300)
@@ -120,12 +131,16 @@ def build_weifan_export(seed_id):
 
 @task()
 def visualize_from_upload(redistrict_id):
-    from states.models import Redistricting, StateSubsection
+    from states.models import Redistricting, StateSubsection, CensusBlock
 
     redistrict = Redistricting.objects.get(id=redistrict_id)
     seed = redistrict.initial
+    state = initial.state
+    districts = seed.districts
     seed.current_step = 0
     
+
+    precincts = StateSubsection.objects.filter(state=state, is_precinct=True)
 
     figure = plt.figure(figsize=(15,15)) # 15 by 15 inch image
     axis = figure.gca()
@@ -134,22 +149,60 @@ def visualize_from_upload(redistrict_id):
 
     district_colors = []
 
-    for district in range(seed.districts):
+    for district in range(districts):
+        
+        layer = [node for node, data in graph.nodes(data=True) if data.get('district') == notated_district]
         layer_color = "#" + str(hex(random.randint(0, int(0xDDDDDD))))[2:]
         layer_color += "0" * (7-len(layer_color)) # to make it 6 digits
-        district_colors.append(layer_color)
+        layer_colors.append(layer_color)
+
+    precinct_district = {}
 
     with open(redistrict.matrix_map.path, "r") as handle:
         lines = handle.readlines()
         seed.total_steps = len(lines)
         seed.save()
         for row in lines:
-            precinct, district = row.split(",")
-            district = int(district)
-            polygon = StateSubsection.objects.get(id=precinct).poly
-            axis.add_patch(PolygonPatch(polygon, fc=district_colors[district], ec=district_colors[district], linewidth=0.8, alpha=0.5, zorder=2))
+            census_block, census_district = row.split(",")
+            
+            census_district = int(census_district)
+            
+            census = CensusBlock.objects.get(id=census_block)
+            precinct = census.subsection
+
+            precinct_district.set_default(precinct.id, {})
+            precinct_district[precinct.id].set_default(census_district, 0)
+            precinct_district[precinct.id][census_district] += 1
+
             seed.current_step += 1
             seed.save()
+    
+    seed.total_steps = len(precinct_district)
+    seed.save()
+
+    for precinct_id, district_counts in precinct_district.items():
+        precinct = StateSubsection.objects.get(id=precinct_id)
+
+        precinct_district = sorted(precinct_district.items(), key=lambda x: -x[1])[0][0]
+
+        axis.add_patch(PolygonPatch(precinct.poly, fc=district_colors[district], ec=district_colors[district], linewidth=0.8, alpha=0.5, zorder=2))
+        seed.current_step += 1
+        seed.save()
+
+    seed.total_steps = len(precincts)
+    seed.save()
+
+    for precinct in precincts:
+        district_votes = [0 for i in range(districts)]
+        
+        for censusblock in precinct.censusblock_set.all():
+            district_votes[graph.nodes[censusblock.id]['district'] - 1] += 1
+        
+        precinct_district = district_votes.index(max(district_votes))
+        
+        axis.add_patch(PolygonPatch(precinct.poly, fc=layer_colors[precinct_district], ec=layer_color[precinct_district], linewidth=0.8, alpha=0.5, zorder=2))
+        newSeed.current_step += 1
+        newSeed.save()
 
     axis.axis('scaled')
     plt.savefig(visual_path, dpi=300)

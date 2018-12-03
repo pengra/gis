@@ -63,12 +63,12 @@ class Command(BaseCommand):
             geometry = polygon['geometry']
 
             newSubsection = StateSubsection(
-                id=properties['VTDST10'],
+                id=properties['GEOID'],
                 state=state,
                 name=properties['NAMELSAD10'],
                 county=int(properties['COUNTYFP10']),
                 multi_polygon=geometry['type'] == 'MultiPolygon',
-                is_precinct=(not 'WV' in properties['VTDST10']),
+                is_precinct=('A' in properties['VTDI10']),
                 land_mass=properties['ALAND10'],
                 water_mass=properties['AWATER10'],
                 perimeter=shape(geometry).length,
@@ -117,6 +117,7 @@ class Command(BaseCommand):
                 subsection=StateSubsection.objects.get(id=bg_vtd_map[properties['BLOCKID10']]),
                 population=properties['POP10'],
                 housing_units=properties['HOUSING10'],
+                poly=GEOSGeometry(json.dumps(geometry))
             )
 
             newBg.save()
@@ -152,46 +153,27 @@ class Command(BaseCommand):
         graph = networkx.Graph()
         
         state = State.objects.get(id=state_fips)
-        polygons = StateSubsection.objects.filter(state=state)
+        polygons = CensusBlock.objects.filter(subsection__state=state)
 
         bar = IncrementalBar("Creating Graph Representation (Step 1: Nodes + Population)", max=len(polygons))
 
         # Create Nodes
-        for i, precinct in enumerate(polygons):
+        for i, census_block in enumerate(polygons):
             bar.next()
-            graph.add_node(precinct.id, population=precinct.population)
+            graph.add_node(census_block.id, population=census_block.population)
         
         bar.finish()
 
         # Create Edges
         bar = IncrementalBar("Creating Graph Representation (Step 2: Edges)", max=len(polygons))
 
-        def get_largest_polygon(multipolygon):
-            polygons = [p for p in multipolygon]
-            areas = [p.area for p in multipolygon]
-            largest_polygon = -1
-            return_polygon = polygons[0]
-            for i, area in enumerate(areas):
-                if area > largest_polygon:
-                    return_polygon = polygons[i]
-                    largest_polygon = area
-            return return_polygon
-
-        for i, precinct in enumerate(polygons):
-            if precinct.multi_polygon:
-                precinct_poly = get_largest_polygon(precinct.poly)    
-            else:
-                precinct_poly = precinct.poly
+        for i, census_block in enumerate(polygons):
                 
             for j, neighbor in enumerate(polygons):
                 if j <= i: 
                     continue
-                elif neighbor.multi_polygon:
-                    neighbor_poly = get_largest_polygon(neighbor.poly)
-                else:
-                    neighbor_poly = neighbor.poly
 
-                if neighbor_poly.touches(precinct_poly):
+                if census_block.poly.touches(neighbor.poly):
                      graph.add_edge(precinct.id, neighbor.id)
 
             bar.next()

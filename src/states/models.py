@@ -59,19 +59,17 @@ class StateSubsection(models.Model):
 
     population = models.BigIntegerField(null=True)
 
-    @property
-    def geo_id(self):
-        return "{}{}{}".format(self.state.id, self.county, self.id)
-
     def __str__(self):
         return self.name
 
 class CensusBlock(models.Model):
 
-    id = models.BigIntegerField(primary_key=True, help_text="id", unique=True) #BLOCKID10
+    id = models.CharField(primary_key=True, help_text="id", unique=True) #BLOCKID10
     subsection = models.ForeignKey(StateSubsection, on_delete=models.CASCADE)
     population = models.IntegerField() #POP10
     housing_units = models.IntegerField() #HOUSING10
+
+    poly = gis_models.GeometryField(geography=True)
 
     def __str__(self):
         return str(self.id)
