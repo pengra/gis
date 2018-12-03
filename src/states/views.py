@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.views.generic import TemplateView
 from states.models import State, SeedRedistrictMap, Redistricting
 from states.forms import BuildNewMapForm, VisualizeSimulation
+import json
 
 from states.workers import build_seed_map, visualize_from_upload
 
@@ -11,7 +12,7 @@ from states.workers import build_seed_map, visualize_from_upload
 
 def avail_maps_json(request):
     data = serializers.serialize('json', SeedRedistrictMap.objects.all())
-    return JsonResponse(data, safe=False)
+    return JsonResponse(json.loads(data), safe=False)
 
 
 class NewMapView(TemplateView):
