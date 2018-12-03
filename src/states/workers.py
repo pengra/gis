@@ -128,7 +128,7 @@ def visualize_from_upload(redistrict_id):
     figure = plt.figure(figsize=(15,15)) # 15 by 15 inch image
     axis = figure.gca()
 
-    visual_path = "visuals/STATE_{}.png".format(state_id)
+    visual_path = "visuals/redistrict_{}.png".format(redistrict_id)
 
     district_colors = []
 
