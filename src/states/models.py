@@ -136,7 +136,7 @@ class SeedRedistrictMap(models.Model):
 
     @property
     def progress_percentage(self):
-        if total_steps:
+        if self.total_steps:
             return min(100, self.current_step * 100 / self.total_steps)
         return 0
 
