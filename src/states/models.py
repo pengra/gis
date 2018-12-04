@@ -40,10 +40,10 @@ class State(models.Model):
 class StateSubsection(models.Model):
     id = models.CharField(primary_key=True, max_length=255, unique=True) # not vtdst10
 
-    geoid = models.CharField(max_length=255, unique=True)
+    geoid = models.CharField(max_length=255, unique=True, null=True)
 
     state = models.ForeignKey(State, on_delete=models.CASCADE)
-    
+
     name = models.CharField(max_length=255) #namelsad10. Is not necessarily unique.
     county = models.IntegerField()
 
