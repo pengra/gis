@@ -76,8 +76,8 @@ class Command(BaseCommand):
                         is_precinct=(not 'WV' in properties['VTDST10']),
                         land_mass=properties['ALAND10'],
                         water_mass=properties['AWATER10'],
-                        perimeter=shape(poly).length,
-                        area=shape(poly).area,
+                        perimeter=poly.length,
+                        area=poly.area,
                         poly=poly
                     )
                     newSubsection.save()
