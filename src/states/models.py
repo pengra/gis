@@ -40,7 +40,7 @@ class State(models.Model):
 class StateSubsection(models.Model):
     id = models.CharField(primary_key=True, max_length=255, unique=True) # not vtdst10
 
-    geoid = models.CharField(max_length=255, unique=True, null=True)
+    geoid = models.CharField(max_length=255, null=True)
 
     state = models.ForeignKey(State, on_delete=models.CASCADE)
 
