@@ -37,16 +37,17 @@ class State(models.Model):
             visualize_map.delay(self.id)
         return parent_save
 
-
 class StateSubsection(models.Model):
+    id = models.CharField(primary_key=True, max_length=255, unique=True) # not vtdst10
 
-    id = models.CharField(primary_key=True, max_length=255, unique=True) # vtdst10
+    geoid = models.CharField(primary_key=True, max_length=255, unique=True)
+
     state = models.ForeignKey(State, on_delete=models.CASCADE)
     
     name = models.CharField(max_length=255) #namelsad10. Is not necessarily unique.
     county = models.IntegerField()
 
-    multi_polygon = models.BooleanField()
+    has_siblings = models.BooleanField(help_text="has siblings?")
     is_precinct = models.BooleanField() # "VW" not in census_id?
 
     land_mass = models.BigIntegerField() # ALAND10
@@ -58,10 +59,6 @@ class StateSubsection(models.Model):
     poly = gis_models.GeometryField(geography=True)
 
     population = models.BigIntegerField(null=True)
-
-    @property
-    def geo_id(self):
-        return "{}{}{}".format(self.state.id, self.county, self.id)
 
     def __str__(self):
         return self.name

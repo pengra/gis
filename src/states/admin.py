@@ -16,7 +16,7 @@ class StateAdmin(admin.ModelAdmin):
     )
 
 class VTDAdmin(admin.ModelAdmin):
-    list_filter = ('state', 'multi_polygon', 'is_precinct')
+    list_filter = ('state', 'has_siblings', 'is_precinct')
     search_fields = (
         'id',
         'name',
@@ -26,7 +26,7 @@ class VTDAdmin(admin.ModelAdmin):
         'name',
         'county',
         'state',
-        'multi_polygon',
+        'has_siblings',
         'is_precinct',
         'land_mass',
         'water_mass',

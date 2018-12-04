@@ -62,20 +62,41 @@ class Command(BaseCommand):
             properties = polygon['properties']
             geometry = polygon['geometry']
 
-            newSubsection = StateSubsection(
-                id=properties['VTDST10'],
-                state=state,
-                name=properties['NAMELSAD10'],
-                county=int(properties['COUNTYFP10']),
-                multi_polygon=geometry['type'] == 'MultiPolygon',
-                is_precinct=(not 'WV' in properties['VTDST10']),
-                land_mass=properties['ALAND10'],
-                water_mass=properties['AWATER10'],
-                perimeter=shape(geometry).length,
-                area=shape(geometry).area,
-                poly=GEOSGeometry(json.dumps(geometry))
-            )
-            newSubsection.save()
+            poly_geos = GEOSGeometry(json.dumps(geometry))
+
+            if geometry['type'] == 'MultiPolygon':
+                for i, poly in enumerate(poly_geos):
+                    newSubsection = StateSubsection(
+                        id=properties['VTDST10'] + str(i + 1),
+                        geoid=properties['VTDST10'],
+                        state=state,
+                        name=properties['NAMELSAD10'],
+                        county=int(properties['COUNTYFP10']),
+                        has_siblings=True,
+                        is_precinct=(not 'WV' in properties['VTDST10']),
+                        land_mass=properties['ALAND10'],
+                        water_mass=properties['AWATER10'],
+                        perimeter=shape(poly).length,
+                        area=shape(poly).area,
+                        poly=poly
+                    )
+                    newSubsection.save()
+            else:
+                newSubsection = StateSubsection(
+                    id=properties['VTDST10'] + '0',
+                    geoid=properties['VTDST10'],
+                    state=state,
+                    name=properties['NAMELSAD10'],
+                    county=int(properties['COUNTYFP10']),
+                    has_siblings=False,
+                    is_precinct=(not 'WV' in properties['VTDST10']),
+                    land_mass=properties['ALAND10'],
+                    water_mass=properties['AWATER10'],
+                    perimeter=shape(geometry).length,
+                    area=shape(geometry).area,
+                    poly=poly_geos
+                )
+                newSubsection.save()
             bar.next()
 
         bar.finish()
@@ -114,7 +135,7 @@ class Command(BaseCommand):
 
             newBg = CensusBlock(
                 id=properties['BLOCKID10'],
-                subsection=StateSubsection.objects.get(id=bg_vtd_map[properties['BLOCKID10']]),
+                subsection=StateSubsection.objects.filter(geoid=bg_vtd_map[properties['BLOCKID10']]).order_by('-land_mass')[0],
                 population=properties['POP10'],
                 housing_units=properties['HOUSING10'],
             )
@@ -166,30 +187,12 @@ class Command(BaseCommand):
         # Create Edges
         bar = IncrementalBar("Creating Graph Representation (Step 2: Edges)", max=len(polygons))
 
-        def get_largest_polygon(multipolygon):
-            polygons = [p for p in multipolygon]
-            areas = [p.area for p in multipolygon]
-            largest_polygon = -1
-            return_polygon = polygons[0]
-            for i, area in enumerate(areas):
-                if area > largest_polygon:
-                    return_polygon = polygons[i]
-                    largest_polygon = area
-            return return_polygon
 
-        for i, precinct in enumerate(polygons):
-            if precinct.multi_polygon:
-                precinct_poly = get_largest_polygon(precinct.poly)    
-            else:
-                precinct_poly = precinct.poly
+        for precinct in polygons:
+            precinct_poly = precinct.poly
                 
-            for j, neighbor in enumerate(polygons):
-                if j <= i: 
-                    continue
-                elif neighbor.multi_polygon:
-                    neighbor_poly = get_largest_polygon(neighbor.poly)
-                else:
-                    neighbor_poly = neighbor.poly
+            for neighbor in polygons.objects.filter(poly__bboverlaps=precinct_poly):
+                neighbor_poly = neighbor.poly
 
                 if neighbor_poly.touches(precinct_poly):
                      graph.add_edge(precinct.id, neighbor.id)
