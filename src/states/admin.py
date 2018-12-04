@@ -19,6 +19,7 @@ class VTDAdmin(admin.ModelAdmin):
     list_filter = ('state', 'has_siblings', 'is_precinct')
     search_fields = (
         'id',
+        'geoid',
         'name',
     )
     list_display = (
