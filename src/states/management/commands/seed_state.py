@@ -67,8 +67,8 @@ class Command(BaseCommand):
             if geometry['type'] == 'MultiPolygon':
                 for i, poly in enumerate(poly_geos):
                     newSubsection = StateSubsection(
-                        id=properties['VTDST10'] + str(i + 1),
-                        geoid=properties['VTDST10'],
+                        id=properties['GEOID10'] + str(i + 1),
+                        geoid=properties['GEOID10'],
                         state=state,
                         name=properties['NAMELSAD10'],
                         county=int(properties['COUNTYFP10']),
@@ -83,8 +83,8 @@ class Command(BaseCommand):
                     newSubsection.save()
             else:
                 newSubsection = StateSubsection(
-                    id=properties['VTDST10'] + '0',
-                    geoid=properties['VTDST10'],
+                    id=properties['GEOID10'] + '0',
+                    geoid=properties['GEOID10'],
                     state=state,
                     name=properties['NAMELSAD10'],
                     county=int(properties['COUNTYFP10']),
