@@ -73,7 +73,7 @@ class Command(BaseCommand):
                         name=properties['NAMELSAD10'],
                         county=int(properties['COUNTYFP10']),
                         has_siblings=True,
-                        is_precinct=(not 'WV' in properties['VTDST10']),
+                        is_precinct=('A' == properties['VTDI10']),
                         land_mass=properties['ALAND10'],
                         water_mass=properties['AWATER10'],
                         perimeter=poly.length,
@@ -89,7 +89,7 @@ class Command(BaseCommand):
                     name=properties['NAMELSAD10'],
                     county=int(properties['COUNTYFP10']),
                     has_siblings=False,
-                    is_precinct=(not 'WV' in properties['VTDST10']),
+                    is_precinct=('A' == properties['VTDI10']),
                     land_mass=properties['ALAND10'],
                     water_mass=properties['AWATER10'],
                     perimeter=shape(geometry).length,
@@ -135,7 +135,7 @@ class Command(BaseCommand):
 
             newBg = CensusBlock(
                 id=properties['BLOCKID10'],
-                subsection=StateSubsection.objects.filter(geoid=bg_vtd_map[properties['BLOCKID10']]).order_by('-land_mass')[0],
+                subsection=StateSubsection.objects.filter(geoid__endswith=bg_vtd_map[properties['BLOCKID10']]).order_by('-land_mass')[0],
                 population=properties['POP10'],
                 housing_units=properties['HOUSING10'],
             )
