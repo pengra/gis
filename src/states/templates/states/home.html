@@ -9,23 +9,22 @@
 
   <div class="album py-5 bg-light">
     <div class="container">
-
       <div class="row">
         {% for state in content %}
-        <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
-          <div class="lh-100">
-            <h6>{{state.details.id}} - {{state.details.name}}</h6>
-            <small>{{state.details.nodes}} Nodes</small>
+        <div class="media">
+          <img src="{% static 'states/default.svg' %}" class="mr-3" />
+          <div class="media-body">
+            <h5 class="mt-0">{{state.details.id}} - {{state.details.name}}</h5>
+            {{state.details.nodes}} Nodes
           </div>
-        </div>
-        <div class="my-3 p-3 bg-white rounded shadow-sm">
-          <h6 class="border-bottom border-gray pb-2 mb-0">Seed Maps</h6>
-          {% for map in state.maps %}
-            <div class="media text-muted pt-3">
-              <img class="bd-placeholder-img mr-2 rounded" src="{% static 'states/default.svg' %}" width="32" height="32" role="img" alt="">
-              <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                <strong>Some Map</strong><br/>
-                This is a map.
+          {% for map in state.maps %}]
+            <div class="media mt-3">
+              <a class="mr-3" href="#">
+                <img src="{% static 'states/blitz.jpg' %}" class="mr-3" />
+              </a>
+              <div class="media-body">
+                <h5 class="mt-0">A Map</h5>
+                Some details about a map.
               </div>
             </div>
           {% endfor %}
