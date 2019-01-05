@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.gis',
     # Plugins
-    'django_celery_results',
+    # 'django_celery_results',
     # My apps
     'states',
 ]
