@@ -218,9 +218,9 @@ class Command(BaseCommand):
             
 
     def handle(self, *args, **options):
-        self._create_state_db(options['state_fips'], options['state_code'], options['state_name'])
-        self._load_vtd(options['state_fips'])
-        self._load_bg_vtd_map(options['state_fips'])
-        self._set_populations(options['state_fips'])
+        #self._create_state_db(options['state_fips'], options['state_code'], options['state_name'])
+        #self._load_vtd(options['state_fips'])
+        #self._load_bg_vtd_map(options['state_fips'])
+        #self._set_populations(options['state_fips'])
         self._create_graph(options['state_fips'])
 
