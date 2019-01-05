@@ -186,7 +186,7 @@ class Command(BaseCommand):
             graph.add_node(
                 rid, 
                 geoid=precinct.geoid,
-                vertexes=precinct.poly,
+                vertexes=precinct.poly.coords,
                 dis=-1, 
                 pop=precinct.population, 
                 name=precinct.name
@@ -214,6 +214,8 @@ class Command(BaseCommand):
         networkx.write_gpickle(graph, TMP_UNZIP + 'graph_{}.rnx'.format(state_fips))
         with open(TMP_UNZIP + 'graph_{}.rnx'.format(state_fips), 'rb') as handle:
             state.graph_representation = File(handle)
+            state.edges = len(graph.edges)
+            state.nodes = len(graph.nodes)
             state.save()
             
 

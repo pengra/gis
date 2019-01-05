@@ -20,6 +20,9 @@ class State(models.Model):
     id = models.IntegerField(primary_key=True)
     code = models.CharField(max_length=2, unique=True)
     name = models.CharField(max_length=100, unique=True)
+    
+    nodes = models.IntegerField(default=0) # number of nodes in the graph
+    edges = models.IntegerField(default=0) # number of edges in the graph
 
     voting_shape_file = models.FileField(upload_to='state/shp/vtd/', null=True)
     block_shape_file = models.FileField(upload_to='state/shp/bg/', null=True)

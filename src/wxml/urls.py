@@ -16,13 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
-from states.views import avail_maps_json
+from states.views import avail_maps_json, HomeView
 from django.conf.urls.static import static
 from wxml.settings import DEBUG
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', avail_maps_json),
+    path('', HomeView.as_view()),
+    path('.json', avail_maps_json),
 ]
 
 
