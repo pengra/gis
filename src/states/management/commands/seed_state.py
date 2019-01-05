@@ -201,7 +201,7 @@ class Command(BaseCommand):
         for precinct in polygons:
             precinct_poly = precinct.poly
                 
-            for neighbor in polygons.objects.filter(poly__bboverlaps=precinct_poly):
+            for neighbor in polygons.filter(poly__bboverlaps=precinct_poly):
                 neighbor_poly = neighbor.poly
 
                 if neighbor_poly.touches(precinct_poly):
