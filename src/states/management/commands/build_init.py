@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from states.models import State, SeedRedistrictMap
-from progress import IncrementalBar
+from progress.bar import IncrementalBar
 import networkx
 
 TMP_UNZIP = "tmp/"
