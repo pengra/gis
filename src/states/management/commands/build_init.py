@@ -27,8 +27,8 @@ class Command(BaseCommand):
 
         graph = self._seed_districts(graph, seed.districts)
 
-        networkx.write_gpickle(graph, TMP_UNZIP + 'redir_{}_{}.rnx'.format(state_fips, seed.id))
-        with open(TMP_UNZIP + 'redir_{}_{}.rnx'.format(state_fips, seed.id), 'rb') as handle:
+        networkx.write_gpickle(graph, TMP_UNZIP + 'redir_{}_{}.rnx'.format(state.id, seed.id))
+        with open(TMP_UNZIP + 'redir_{}_{}.rnx'.format(state.id, seed.id), 'rb') as handle:
             seed.initial_file = File(handle)
             seed.save()
                 
