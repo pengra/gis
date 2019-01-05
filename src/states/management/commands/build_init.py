@@ -2,6 +2,8 @@ from django.core.management.base import BaseCommand
 from states.models import State, SeedRedistrictingMap
 import networkx
 
+TMP_UNZIP = "tmp/"
+
 class Command(BaseCommand):
     help = "Create a seed Map to start processing"
 
@@ -20,12 +22,16 @@ class Command(BaseCommand):
         )
         seed.save()
         graph = networkx.read_gpickle(state.graph_representation.path)
-        graph.graph['districts'] = 
 
-        self._seed_districts(graph, seed.districts, )
+        graph = self._seed_districts(graph, seed.districts)
+
+        networkx.write_gpickle(graph, TMP_UNZIP + 'redir_{}_{}.rnx'.format(state_fips, seed.id))
+        with open(TMP_UNZIP + 'redir_{}_{}.rnx'.format(state_fips, seed.id), 'rb') as handle:
+            seed.initial_file = File(handle)
+            seed.save()
                 
 
-    def _seed_districts(self, graph, districts, newSeed):
+    def _seed_districts(self, graph, districts):
         """
         A simple procedure that selects n random seed nodes (n = number of districts)
         and then selects neighbors of those seeds and claims them to be of the same
@@ -72,8 +78,10 @@ class Command(BaseCommand):
                 if round_complete: break # Quicker breaking
 
             if len(graph_pool) == last_run:
-                for node in graph_pool:
-                    graph.remove_node(node)
+                # PANIC
+                # wait don't, graphs are just disconnected
+                # for node in graph_pool:
+                #    graph.remove_node(node)
                 break
 
         bar.finish()
