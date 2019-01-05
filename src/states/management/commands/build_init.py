@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from states.models import State, SeedRedistrictMap
+from django.core.files import File
 from progress.bar import IncrementalBar
 import networkx
 import random
