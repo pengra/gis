@@ -175,7 +175,7 @@ class Command(BaseCommand):
 
         graph.graph['fips'] = state.id
         graph.graph['code'] = state.code
-        graph.grpah['state'] = state.name
+        graph.graph['state'] = state.name
         graph.graph['districts'] = -1
 
         bar = IncrementalBar("Creating Graph Representation (Step 1: Nodes + Meta Data)", max=len(polygons))
