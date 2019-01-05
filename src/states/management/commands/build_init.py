@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from states.models import State, SeedRedistrictingMap
+from states.models import State, SeedRedistrictMap
 import networkx
 
 TMP_UNZIP = "tmp/"
@@ -15,7 +15,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         assert options['districts'] > 1
         state = State.objects.get(id=options['state_id'])
-        seed = SeedRedistrictingMap(
+        seed = SeedRedistrictMap(
             title=options['title'],
             districts=options['districts'],
             state=state
