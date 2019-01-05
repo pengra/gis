@@ -126,7 +126,6 @@ def visualize_from_upload(redistrict_id):
     seed = redistrict.initial
     seed.current_step = 0
     
-
     figure = plt.figure(figsize=(15,15)) # 15 by 15 inch image
     axis = figure.gca()
 
@@ -157,7 +156,6 @@ def visualize_from_upload(redistrict_id):
     with open(visual_path, 'rb') as handle:
         redistrict.visualization = File(handle)
         redistrict.save()
-
 
 @task()
 def visualize_map(state_id):

@@ -4,3 +4,7 @@
 */tmp/*
 *.env/*
 */raws/*
+gis
+gis.service
+gisw.service
+.vscode/

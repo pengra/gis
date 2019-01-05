@@ -29,7 +29,7 @@ def download_file(url):
     bar = IncrementalBar("Downloading {}".format(url), max=int(r.headers['Content-length']))
     with open(local_filename, 'wb') as handle:
         for chunk in r.iter_content(chunk_size=CHUNK_SIZE):
-            bar.next(CHUNK_SIZE)
+            bar.next(len(chunk))
             if chunk:
                 handle.write(chunk)
     bar.finish()
@@ -53,7 +53,7 @@ class Command(BaseCommand):
         state = State.objects.get(id=state_fips)
         zip_location = download_file("{api}tl_2012_{fips}_vtd10.zip".format(api=VTD_DATASOURCE, fips=state_fips))
         unzip_file(zip_location)
-        shape_file = glob(TMP_UNZIP + "*vtd10.shp")[0]
+        shape_file = glob(TMP_UNZIP + "*{}*vtd10.shp".format(state_fips))[0]
         polygons = fiona.open(shape_file)
 
         bar = IncrementalBar("Loading Voting Districts", max=len(polygons))
@@ -65,9 +65,8 @@ class Command(BaseCommand):
             poly_geos = GEOSGeometry(json.dumps(geometry))
 
             if geometry['type'] == 'MultiPolygon':
-                for i, poly in enumerate(poly_geos):
+                for poly in poly_geos:
                     newSubsection = StateSubsection(
-                        id=properties['GEOID10'] + str(i + 1),
                         geoid=properties['GEOID10'],
                         state=state,
                         name=properties['NAMELSAD10'],
@@ -83,7 +82,6 @@ class Command(BaseCommand):
                     newSubsection.save()
             else:
                 newSubsection = StateSubsection(
-                    id=properties['GEOID10'] + '0',
                     geoid=properties['GEOID10'],
                     state=state,
                     name=properties['NAMELSAD10'],
@@ -111,20 +109,17 @@ class Command(BaseCommand):
         state = State.objects.get(id=state_fips)
         zip_location = download_file("{api}BlockAssign_ST{fips}_{code}.zip".format(api=BG_VTD_MAP_DATASOURCE, fips=state_fips, code=state.code))
         unzip_file(zip_location)
-        csv_file = glob(TMP_UNZIP + "*_VTD.txt")[0]
+        csv_file = glob(TMP_UNZIP + "*{}*_VTD.txt".format(state_fips))[0]
+        
         with open(csv_file, newline='') as os_handle:
             csv_handle = csv.reader(os_handle)
             next(csv_handle)
             bg_vtd_map = {blockid: vtd for (blockid, countyid, vtd) in csv_handle}
 
-        with open(zip_location, 'rb') as handle:
-            state.block_dictionary = File(handle)
-            state.save()
-
         state = State.objects.get(id=state_fips)
         zip_location = download_file("{api}tabblock2010_{fips}_pophu.zip".format(api=BG_DATASOURCE, fips=state_fips))
         unzip_file(zip_location)
-        shape_file = glob(TMP_UNZIP + "*pophu.shp")[0]
+        shape_file = glob(TMP_UNZIP + "*{}*pophu.shp".format(state_fips))[0]
         polygons = fiona.open(shape_file)
 
         bar = IncrementalBar("Loading census population data", max=len(polygons))
@@ -135,12 +130,16 @@ class Command(BaseCommand):
 
             newBg = CensusBlock(
                 id=properties['BLOCKID10'],
-                subsection=StateSubsection.objects.filter(geoid__endswith=bg_vtd_map[properties['BLOCKID10']]).order_by('-land_mass')[0],
+                # subsection=StateSubsection.objects.filter(geoid__endswith=bg_vtd_map[properties['BLOCKID10']]).order_by('-land_mass')[0],
                 population=properties['POP10'],
                 housing_units=properties['HOUSING10'],
+                poly=GEOSGeometry(json.dumps(geometry))
             )
 
             newBg.save()
+            newBg.subsection = StateSubsection.objects.filter(poly__bboverlaps=newBg.poly).order_by('-land_mass')[0]
+            newBg.save()
+
             bar.next()
 
         bar.finish()
@@ -166,7 +165,6 @@ class Command(BaseCommand):
             subsection.save()
         bar.finish()
 
-        state.fast_visualization = None
         state.save()
 
     def _create_graph(self, state_fips):
@@ -175,12 +173,24 @@ class Command(BaseCommand):
         state = State.objects.get(id=state_fips)
         polygons = StateSubsection.objects.filter(state=state)
 
-        bar = IncrementalBar("Creating Graph Representation (Step 1: Nodes + Population)", max=len(polygons))
+        graph.graph['fips'] = state.id
+        graph.graph['code'] = state.code
+        graph.grpah['state'] = state.name
+        graph.graph['districts'] = -1
+
+        bar = IncrementalBar("Creating Graph Representation (Step 1: Nodes + Meta Data)", max=len(polygons))
 
         # Create Nodes
-        for i, precinct in enumerate(polygons):
+        for rid, precinct in enumerate(polygons):
             bar.next()
-            graph.add_node(precinct.id, population=precinct.population)
+            graph.add_node(
+                rid, 
+                geoid=precinct.geoid,
+                vertexes=precinct.poly,
+                dis=-1, 
+                pop=precinct.population, 
+                name=precinct.name
+            )
         
         bar.finish()
 
@@ -201,8 +211,8 @@ class Command(BaseCommand):
 
         bar.finish()
 
-        networkx.write_gpickle(graph, TMP_UNZIP + 'graph_{}.nx'.format(state_fips))
-        with open(TMP_UNZIP + 'graph_{}.nx'.format(state_fips), 'rb') as handle:
+        networkx.write_gpickle(graph, TMP_UNZIP + 'graph_{}.rnx'.format(state_fips))
+        with open(TMP_UNZIP + 'graph_{}.rnx'.format(state_fips), 'rb') as handle:
             state.graph_representation = File(handle)
             state.save()
             
