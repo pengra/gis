@@ -12,7 +12,7 @@
       <div class="row">
         {% for state in content %}
         <div class="media">
-          <img src="{% static 'states/blitz.jpg' %}" class="mr-3" />
+          <img src="{% static 'states/blitz.jpg' %}" class="mr-3" height="64" width="64" />
           <div class="media-body">
             <h5 class="mt-0">{{state.details.id}} - {{state.details.name}}</h5>
             {{state.details.nodes}} Nodes
@@ -20,7 +20,7 @@
           {% for map in state.maps %}]
             <div class="media mt-3">
               <a class="mr-3" href="#">
-                <img src="{% static 'states/blitz.jpg' %}" class="mr-3" />
+                <img src="{% static 'states/blitz.jpg' %}" class="mr-3" height="64" width="64" />
               </a>
               <div class="media-body">
                 <h5 class="mt-0">A Map</h5>
