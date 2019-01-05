@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from states.models import State, SeedRedistrictMap
 from progress.bar import IncrementalBar
 import networkx
+import random
 
 TMP_UNZIP = "tmp/"
 
