@@ -117,7 +117,7 @@ def build_weifan_export(seed_id):
     seed.save()
 
 
-@task()
+# @task()
 def visualize_from_upload(redistrict_id):
     from states.models import Redistricting, StateSubsection
 
@@ -156,7 +156,7 @@ def visualize_from_upload(redistrict_id):
         redistrict.visualization = File(handle)
         redistrict.save()
 
-@task()
+# @task()
 def visualize_map(state_id):
     # Build a state map
 
