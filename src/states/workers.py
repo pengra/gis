@@ -1,4 +1,3 @@
-from celery.decorators import task
 from descartes import PolygonPatch
 from django.core.files import File
 import random
@@ -10,7 +9,7 @@ from progress.bar import IncrementalBar
 
 import matplotlib.pyplot as plt
 
-@task()
+# @task()
 def build_seed_map(title, seed, districts, multipolygon, iterations, granularity, nonprecinct):
     # Build a seed map
     from states.models import State, StateSubsection, SeedRedistrictMap
