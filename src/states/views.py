@@ -1,6 +1,6 @@
 from django.core import serializers
 from django.http import JsonResponse
-from states.models import State
+from states.models import State, SeedRedistrictMap
 import json
 
 # Create your views here.
