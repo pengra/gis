@@ -81,11 +81,22 @@ class Command(BaseCommand):
                 if round_complete: break # Quicker breaking
 
             if len(graph_pool) == last_run:
+                for candidate in graph_pool:
+                    for _, neighbor in graph.edges(candidate):
+                        district = graph.nodes[neighbor].get('dis', -1)
+                        if district != -1:
+                           graph_pool.remove(candidate)
+                           district_sizes[district][0] += 1
+                           bar.next()
+                           graph.nodes[candidate]['dis'] = district
+                           round_complete = True
+                           break
+                    if round_complete: break
+                if round_complete: break
+
+            if len(graph_pool) == last_run:
                 # PANIC
-                # wait don't, graphs are just disconnected
-                # for node in graph_pool:
-                #    graph.remove_node(node)
-                break
+                import pdb; pdb.set_trace()
 
         bar.finish()
 
