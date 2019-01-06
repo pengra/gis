@@ -78,7 +78,7 @@ class Command(BaseCommand):
                                 round_complete = True
                                 break
                     if round_complete: break # Quicker breaking
-                if round_complete: break # Quicker breaking
+                # if round_complete: break # Quicker breaking
 
             if len(graph_pool) == last_run:
                 for candidate in graph_pool:
