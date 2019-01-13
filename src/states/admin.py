@@ -16,7 +16,13 @@ class StateAdmin(admin.ModelAdmin):
     )
 
 class CountyAdmin(admin.ModelAdmin):
-    pass
+    list_display = (
+        'name',
+        'state',
+        'area_land',
+        'area_water',
+        'population'
+    )
 
 class VTDAdmin(admin.ModelAdmin):
     list_filter = ('state', 'has_siblings', 'is_precinct')
