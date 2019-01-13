@@ -237,6 +237,6 @@ class Command(BaseCommand):
         self._load_vtd(options['state_fips'])
         self._load_bg_vtd_map(options['state_fips'])
         self._set_populations(options['state_fips'])
-        self.__update_county_population(options['state_fips'])
+        self._update_county_population(options['state_fips'])
         self._create_graph(options['state_fips'], options['county_mode'])
 
