@@ -194,6 +194,8 @@ class Command(BaseCommand):
 
         bar = IncrementalBar("Creating Graph Representation (Step 1: Nodes + Meta Data)", max=len(polygons))
 
+        rid_map = {}
+
         # Create Nodes
         for rid, precinct in enumerate(polygons):
             bar.next()
@@ -205,6 +207,7 @@ class Command(BaseCommand):
                 pop=precinct.population, 
                 name=precinct.name
             )
+            rid_map[geoid] = rid
         
         bar.finish()
 
@@ -213,10 +216,7 @@ class Command(BaseCommand):
 
         for precinct in polygons:
             for neighbor in polygons.filter(poly__bboverlaps=precinct.poly):
-                graph.add_edge(precinct.id, neighbor.id)
-
-                #if neighbor_poly.touches(precinct_poly):
-                
+                graph.add_edge(rid_map[precinct.id], rid_map[neighbor.id])
 
             bar.next()
 
