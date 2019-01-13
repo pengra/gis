@@ -15,6 +15,9 @@ class StateAdmin(admin.ModelAdmin):
         'id'
     )
 
+class CountyAdmin(admin.ModelAdmin):
+    pass
+
 class VTDAdmin(admin.ModelAdmin):
     list_filter = ('state', 'has_siblings', 'is_precinct')
     search_fields = (
@@ -46,3 +49,4 @@ admin.site.register(models.State, StateAdmin)
 admin.site.register(models.StateSubsection, VTDAdmin)
 admin.site.register(models.CensusBlock, CensusAdmin)
 admin.site.register(models.SeedRedistrictMap)
+admin.site.register(models.County, CountyAdmin)
