@@ -18,7 +18,7 @@ from django.urls import path
 from django.views.generic import TemplateView
 from states.views import avail_maps_json, HomeView
 from django.conf.urls.static import static
-from wxml.settings import DEBUG
+from wxml.settings import DEBUG, MEDIA_URL, MEDIA_ROOT
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,6 +26,5 @@ urlpatterns = [
     path('.json', avail_maps_json),
 ]
 
-
 if DEBUG:
-    urlpatterns += static('/visuals/', document_root='visuals/') + static('/raws/', document_root='raws/') + static('/redist/', document_root='redist/')
+    urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
