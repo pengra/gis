@@ -207,7 +207,7 @@ class Command(BaseCommand):
                 pop=precinct.population, 
                 name=precinct.name
             )
-            rid_map[geoid] = rid
+            rid_map[precinct.geoid] = rid
         
         bar.finish()
 
