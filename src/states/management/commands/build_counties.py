@@ -123,7 +123,15 @@ class Command(BaseCommand):
         for polygon in polygons:
             properties = polygon['properties']
             geometry = polygon['geometry']
-            
+
+            bar.next()
+
+            if County.objects.filter(id=properties['GEOID']):
+                continue
+
+            if State.objects.filter(id=int(properties['STATEFP'])):
+                continue
+
             County.objects.create(
                 id=properties['GEOID'],
                 state=State.objects.get(id=int(properties['STATEFP'])),
@@ -132,6 +140,8 @@ class Command(BaseCommand):
                 area_land=properties['ALAND'],
                 area_water=properties['AWATER']
             )
+
+        bar.finish()
 
     def handle(self, *args, **kwargs):
         self._load_states()
