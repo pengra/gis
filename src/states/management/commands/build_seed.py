@@ -25,6 +25,7 @@ class Command(BaseCommand):
         )
         seed.save()
         graph = networkx.read_gpickle(state.graph_representation.path)
+        graph.graph['districts'] = options['districts']
 
         graph = self._seed_districts(graph, seed.districts)
 
@@ -49,10 +50,10 @@ class Command(BaseCommand):
         graph_pool = [_ for _ in graph.nodes]
         random.shuffle(graph_pool)
 
-        district_sizes = [[1, district] for district in range(1, districts + 1)]
+        district_sizes = [[1, district] for district in range(districts)]
 
         # Start the district with some seeds
-        for district in range(1, districts + 1):
+        for district in range(districts):
             bar.next()
             
             seed = graph_pool.pop()
