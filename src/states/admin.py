@@ -23,6 +23,11 @@ class CountyAdmin(admin.ModelAdmin):
         'area_water',
         'population'
     )
+    list_filter = ('state',)
+    search_fields = (
+        'id',
+        'name'
+    )
 
 class VTDAdmin(admin.ModelAdmin):
     list_filter = ('state', 'has_siblings', 'is_precinct')
