@@ -126,10 +126,10 @@ class Command(BaseCommand):
 
             bar.next()
 
-            if County.objects.filter(id=properties['GEOID']):
+            if not County.objects.filter(id=properties['GEOID']):
                 continue
 
-            if State.objects.filter(id=int(properties['STATEFP'])):
+            if not State.objects.filter(id=int(properties['STATEFP'])):
                 continue
 
             County.objects.create(
