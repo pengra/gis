@@ -216,7 +216,8 @@ class Command(BaseCommand):
 
         for precinct in polygons:
             for neighbor in polygons.filter(poly__bboverlaps=precinct.poly):
-                graph.add_edge(rid_map[precinct.id], rid_map[neighbor.id])
+                if precinct.id != neighbor.id:
+                    graph.add_edge(rid_map[precinct.id], rid_map[neighbor.id])
 
             bar.next()
 
