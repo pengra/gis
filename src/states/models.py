@@ -44,6 +44,10 @@ class County(models.Model):
     area_land = models.BigIntegerField(null=True)
     area_water = models.BigIntegerField(null=True)
 
+    @property
+    def geoid(self):
+        return self.id
+
     def __str__(self):
         return self.name
 
