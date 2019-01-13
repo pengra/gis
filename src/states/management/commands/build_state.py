@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from states.models import State, StateSubsection, CensusBlock
+from states.models import State, StateSubsection, CensusBlock, County
 from django.core.files import File
 import networkx
 import requests
@@ -48,6 +48,7 @@ class Command(BaseCommand):
         parser.add_argument('state_fips', type=int)
         parser.add_argument('state_code', type=str)
         parser.add_argument('state_name', type=str)
+        parser.add_argument('county_mode', type=bool)
 
     def _load_vtd(self, state_fips):
         state = State.objects.get(id=state_fips)
@@ -158,20 +159,33 @@ class Command(BaseCommand):
 
     def _set_populations(self, state_fips):
         state = State.objects.get(id=state_fips)
-        bar = IncrementalBar("Applying census population data", max=len(StateSubsection.objects.filter(state=state)))
-        for subsection in StateSubsection.objects.filter(state=state):
+        subsections = StateSubsection.objects.filter(state=state)
+        bar = IncrementalBar("Applying census population data", max=len(subsections))
+        for subsection in subsections:
             bar.next()
             subsection.population = sum([_.population for _ in CensusBlock.objects.filter(subsection=subsection)])
             subsection.save()
         bar.finish()
 
-        state.save()
+    def _update_county_population(self, state_fips):
+        state = State.objects.get(id=state_fips)
+        counties = County.objects.filter(state=state)
+        bar = IncrementalBar("Applying census population data to counties", max=len(counties))
+        for county in counties:
+            county.population = sum([_.population for _ in StateSubsection.objects.filter(poly__bboverlaps=county.poly)])
+            county.save()
+            bar.next()
+        bar.finish()
 
-    def _create_graph(self, state_fips):
+
+    def _create_graph(self, state_fips, county_mode):
         graph = networkx.Graph()
         
         state = State.objects.get(id=state_fips)
-        polygons = StateSubsection.objects.filter(state=state)
+        if county_mode:
+            polygons = County.objects.filter(state=state)
+        else:
+            polygons = StateSubsection.objects.filter(state=state)
 
         graph.graph['fips'] = state.id
         graph.graph['code'] = state.code
@@ -196,7 +210,6 @@ class Command(BaseCommand):
 
         # Create Edges
         bar = IncrementalBar("Creating Graph Representation (Step 2: Edges)", max=len(polygons))
-
 
         for precinct in polygons:
             precinct_poly = precinct.poly
@@ -224,5 +237,6 @@ class Command(BaseCommand):
         self._load_vtd(options['state_fips'])
         self._load_bg_vtd_map(options['state_fips'])
         self._set_populations(options['state_fips'])
-        self._create_graph(options['state_fips'])
+        self.__update_county_population(options['state_fips'])
+        self._create_graph(options['state_fips'], options['county_mode'])
 
