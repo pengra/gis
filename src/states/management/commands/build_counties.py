@@ -126,7 +126,7 @@ class Command(BaseCommand):
             
             County.objects.create(
                 id=properties['GEOID'],
-                state=State.objects.get(id=properties['STATEFP']),
+                state=State.objects.get(id=int(properties['STATEFP'])),
                 name=properties['NAMELSAD'],
                 poly=GEOSGeometry(json.dumps(geometry)),
                 area_land=properties['ALAND'],
