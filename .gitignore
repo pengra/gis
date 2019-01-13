@@ -8,3 +8,6 @@ gis
 gis.service
 gisw.service
 .vscode/
+secrets.sh
+media/
+static/
