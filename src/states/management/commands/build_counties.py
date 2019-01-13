@@ -21,21 +21,21 @@ TMP_UNZIP = "tmp/"
 
 STATES = [
     # ["State Abbreviation", FIPS, Name]
-    ["AK", 02, "ALASKA"],
+    ["AK", 2, "ALASKA"],
     ["MS", 28, "MISSISSIPPI"],
-    ["AL", 01, "ALABAMA"],
+    ["AL", 1, "ALABAMA"],
     ["MT", 30, "MONTANA"],
-    ["AR", 05, "ARKANSAS"],
+    ["AR", 5, "ARKANSAS"],
     ["NC", 37, "NORTH CAROLINA"],
     ["AS", 60, "AMERICAN SAMOA"],
     ["ND", 38, "NORTH DAKOTA"],
-    ["AZ", 04, "ARIZONA"],
+    ["AZ", 4, "ARIZONA"],
     ["NE", 31, "NEBRASKA"],
-    ["CA", 06, "CALIFORNIA"],
+    ["CA", 6, "CALIFORNIA"],
     ["NH", 33, "NEW HAMPSHIRE"],
-    ["CO", 08, "COLORADO"],
+    ["CO", 8, "COLORADO"],
     ["NJ", 34, "NEW JERSEY"],
-    ["CT", 09, "CONNECTICUT"],
+    ["CT", 9, "CONNECTICUT"],
     ["NM", 35, "NEW MEXICO"],
     ["DC", 11, "DISTRICT OF COLUMBIA"],
     ["NV", 32, "NEVADA"],
@@ -103,6 +103,7 @@ class Command(BaseCommand):
         bar = IncrementalBar("Loading States into DB", max=len(STATES))
 
         for (abbr, fips, state) in STATES:
+            if State.objects.filter(id=fips): continue
             State.objects.create(
                 id=fips,
                 code=abbr,
@@ -129,9 +130,9 @@ class Command(BaseCommand):
                 name=properties['NAMELSAD'],
                 poly=GEOSGeometry(json.dumps(geometry)),
                 area_land=properties['ALAND'],
-                area_land=properties['AWATER']
+                area_water=properties['AWATER']
             )
 
-    def handle(self):
+    def handle(self, *args, **kwargs):
         self._load_states()
         self._load_counties()
