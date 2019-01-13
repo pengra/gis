@@ -15,6 +15,7 @@ A list of what blocks are in what: https://www.census.gov/geo/maps-data/data/baf
 """
 
 
+
 class State(models.Model):
 
     id = models.IntegerField(primary_key=True)
@@ -30,6 +31,22 @@ class State(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class County(models.Model):
+    id = models.IntegerField(primary_key=True)
+    state = models.ForeignKey(State, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255) # NAMESLAD
+
+    poly = gis_models.GeometryField(geography=True)
+
+    population = models.BigIntegerField(null=True)
+    area_land = models.BigIntegerField(null=True)
+    area_water = models.BigIntegerField(null=True)
+
+    def __str__(self):
+        return self.name
+
 
 class StateSubsection(models.Model):
     geoid = models.CharField(max_length=255, null=True)
