@@ -25,9 +25,10 @@ class Command(BaseCommand):
         )
         seed.save()
         graph = networkx.read_gpickle(state.graph_representation.path)
-        graph.graph['districts'] = options['districts']
+        
 
         graph = self._seed_districts(graph, seed.districts)
+        graph.graph['districts'] = options['districts']
 
         networkx.write_gpickle(graph, TMP_UNZIP + 'redir_{}_{}.dnx'.format(state.id, seed.id))
         with open(TMP_UNZIP + 'redir_{}_{}.dnx'.format(state.id, seed.id), 'rb') as handle:
