@@ -212,13 +212,11 @@ class Command(BaseCommand):
         bar = IncrementalBar("Creating Graph Representation (Step 2: Edges)", max=len(polygons))
 
         for precinct in polygons:
-            precinct_poly = precinct.poly
-                
-            for neighbor in polygons.filter(poly__bboverlaps=precinct_poly):
-                neighbor_poly = neighbor.poly
+            for neighbor in polygons.filter(poly__bboverlaps=precinct.poly):
+                graph.add_edge(precinct.id, neighbor.id)
 
-                if neighbor_poly.touches(precinct_poly):
-                     graph.add_edge(precinct.id, neighbor.id)
+                #if neighbor_poly.touches(precinct_poly):
+                
 
             bar.next()
 
