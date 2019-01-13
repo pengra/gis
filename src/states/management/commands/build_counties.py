@@ -116,7 +116,7 @@ class Command(BaseCommand):
     def _load_counties(self):
         zip_location = download_file(COUNTIES)
         unzip_file(zip_location)
-        shape_file = glob(TMP_UNZIP + "tl_2012_us_county.zip")[0]
+        shape_file = glob(TMP_UNZIP + "tl_2012_us_county.shp")[0]
         polygons = fiona.open(shape_file)
         bar = IncrementalBar("Loading Counties", max=len(polygons))
 
