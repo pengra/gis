@@ -50,6 +50,7 @@ class Command(BaseCommand):
         parser.add_argument('state_name', type=str)
         parser.add_argument('county_mode', type=int)
         parser.add_argument('graph_only', type=int)
+        parser.add_argument('graph_edge_touches', type=int)
 
     def _load_vtd(self, state_fips):
         state = State.objects.get(id=state_fips)
@@ -179,7 +180,7 @@ class Command(BaseCommand):
         bar.finish()
 
 
-    def _create_graph(self, state_fips, county_mode):
+    def _create_graph(self, state_fips, county_mode, graph_edge_touches):
         graph = networkx.Graph()
         
         state = State.objects.get(id=state_fips)
@@ -219,8 +220,10 @@ class Command(BaseCommand):
         # Create Edges
         bar = IncrementalBar("Creating Graph Representation (Step 2: Edges)", max=len(polygons))
 
+        key = "poly__touches" if graph_edge_touches else "poly__bboverlaps"
+
         for precinct in polygons:
-            for neighbor in polygons.filter(poly__bboverlaps=precinct.poly):
+            for neighbor in polygons.filter(**{key: precinct.poly}):
                 if precinct.id != neighbor.id:
                     graph.add_edge(rid_map[precinct.id], rid_map[neighbor.id])
 
@@ -243,5 +246,5 @@ class Command(BaseCommand):
             self._load_bg_vtd_map(options['state_fips'])
             self._set_populations(options['state_fips'])
             self._update_county_population(options['state_fips'])
-        self._create_graph(options['state_fips'], options['county_mode'])
+        self._create_graph(options['state_fips'], options['county_mode'], options['graph_edge_touches'])
 
