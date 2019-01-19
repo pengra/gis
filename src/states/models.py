@@ -38,7 +38,7 @@ class County(models.Model):
     state = models.ForeignKey(State, on_delete=models.CASCADE)
     name = models.CharField(max_length=255) # NAMESLAD
 
-    poly = gis_models.GeometryField(geography=True)
+    poly = gis_models.GeometryField()
 
     population = models.BigIntegerField(null=True)
     area_land = models.BigIntegerField(null=True)
@@ -69,7 +69,7 @@ class StateSubsection(models.Model):
     perimeter = models.FloatField()
     area = models.FloatField()
 
-    poly = gis_models.GeometryField(geography=True)
+    poly = gis_models.GeometryField()
 
     population = models.BigIntegerField(null=True)
 
@@ -83,7 +83,7 @@ class CensusBlock(models.Model):
     population = models.IntegerField() #POP10
     housing_units = models.IntegerField() #HOUSING10
 
-    poly = gis_models.GeometryField(geography=True)
+    poly = gis_models.GeometryField()
 
     def __str__(self):
         return str(self.id)
