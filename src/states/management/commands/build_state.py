@@ -138,7 +138,7 @@ class Command(BaseCommand):
             )
 
             newBg.save()
-            newBg.subsection = StateSubsection.objects.filter(poly__bbcontains=newBg.poly).order_by('-land_mass')[0]
+            newBg.subsection = StateSubsection.objects.filter(poly__bboverlaps=newBg.poly).order_by('-land_mass')[0]
             newBg.save()
 
             bar.next()
@@ -172,7 +172,7 @@ class Command(BaseCommand):
         counties = County.objects.filter(state=state)
         bar = IncrementalBar("Applying census population data to counties", max=len(counties))
         for county in counties:
-            county.population = sum([_.population for _ in StateSubsection.objects.filter(poly__bbcontains=county.poly)])
+            county.population = sum([_.population for _ in StateSubsection.objects.filter(poly__bboverlaps=county.poly)])
             county.save()
             bar.next()
         bar.finish()
