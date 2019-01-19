@@ -48,7 +48,7 @@ class Command(BaseCommand):
         parser.add_argument('state_fips', type=int)
         parser.add_argument('state_code', type=str)
         parser.add_argument('state_name', type=str)
-        parser.add_argument('county_mode', type=bool)
+        parser.add_argument('county_mode', type=int)
 
     def _load_vtd(self, state_fips):
         state = State.objects.get(id=state_fips)
