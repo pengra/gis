@@ -49,6 +49,7 @@ class Command(BaseCommand):
         parser.add_argument('state_code', type=str)
         parser.add_argument('state_name', type=str)
         parser.add_argument('county_mode', type=int)
+        parser.add_argument('graph_only', type=int)
 
     def _load_vtd(self, state_fips):
         state = State.objects.get(id=state_fips)
@@ -239,10 +240,11 @@ class Command(BaseCommand):
             
 
     def handle(self, *args, **options):
-        self._create_state_db(options['state_fips'], options['state_code'], options['state_name'])
-        self._load_vtd(options['state_fips'])
-        self._load_bg_vtd_map(options['state_fips'])
-        self._set_populations(options['state_fips'])
-        self._update_county_population(options['state_fips'])
+        if not options['graph_only']:
+            self._create_state_db(options['state_fips'], options['state_code'], options['state_name'])
+            self._load_vtd(options['state_fips'])
+            self._load_bg_vtd_map(options['state_fips'])
+            self._set_populations(options['state_fips'])
+            self._update_county_population(options['state_fips'])
         self._create_graph(options['state_fips'], options['county_mode'])
 
