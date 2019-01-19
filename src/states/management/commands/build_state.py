@@ -212,7 +212,7 @@ class Command(BaseCommand):
                 is_super=False,
                 super_level=0,
             )
-            rid_map[precinct.geoid] = rid
+            rid_map[precinct.id] = rid
         
         bar.finish()
 
@@ -222,10 +222,7 @@ class Command(BaseCommand):
         for precinct in polygons:
             for neighbor in polygons.filter(poly__bboverlaps=precinct.poly):
                 if precinct.id != neighbor.id:
-                    if county_mode:
-                        graph.add_edge(rid_map[precinct.id], rid_map[neighbor.id])
-                    else:
-                        graph.add_edge(rid_map[precinct.geoid], rid_map[neighbor.geoid])
+                    graph.add_edge(rid_map[precinct.id], rid_map[neighbor.id])
 
             bar.next()
 
