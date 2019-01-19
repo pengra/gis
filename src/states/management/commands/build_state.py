@@ -191,6 +191,7 @@ class Command(BaseCommand):
         graph.graph['code'] = state.code
         graph.graph['state'] = state.name
         graph.graph['districts'] = -1
+        graph.graph['is_super'] = 0
 
         bar = IncrementalBar("Creating Graph Representation (Step 1: Nodes + Meta Data)", max=len(polygons))
 
@@ -205,7 +206,10 @@ class Command(BaseCommand):
                 vertexes=precinct.poly.coords,
                 dis=-1, 
                 pop=precinct.population, 
-                name=precinct.name
+                name=precinct.name,
+                children=[],
+                is_super=False,
+                super_level=0,
             )
             rid_map[precinct.geoid] = rid
         
@@ -223,8 +227,8 @@ class Command(BaseCommand):
 
         bar.finish()
 
-        networkx.write_gpickle(graph, TMP_UNZIP + 'graph_{}.rnx'.format(state_fips))
-        with open(TMP_UNZIP + 'graph_{}.rnx'.format(state_fips), 'rb') as handle:
+        networkx.write_gpickle(graph, TMP_UNZIP + 'graph_{}.snx'.format(state_fips))
+        with open(TMP_UNZIP + 'graph_{}.snx'.format(state_fips), 'rb') as handle:
             state.graph_representation = File(handle)
             state.edges = len(graph.edges)
             state.nodes = len(graph.nodes)
