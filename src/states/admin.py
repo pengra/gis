@@ -53,7 +53,7 @@ class VTDAdmin(admin.ModelAdmin):
 
 class CensusAdmin(admin.ModelAdmin):
     list_display = ('id', 'subsection', 'population', 'housing_units')
-    search_fields = ('id', 'subsection')
+    search_fields = ('id',)
     
 
 admin.site.register(models.State, StateAdmin)
