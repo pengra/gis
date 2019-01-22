@@ -165,7 +165,7 @@ class Command(BaseCommand):
         bar = IncrementalBar("Applying census population data", max=len(subsections))
         for subsection in subsections:
             bar.next()
-            subsection.population = sum([_.population for _ in CensusBlock.objects.filter(subsection=subsection)])
+            subsection.population = sum([_.population for _ in CensusBlock.objects.filter(poly__bboverlaps=subsection.poly)])
             subsection.save()
         bar.finish()
 
