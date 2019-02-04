@@ -1,7 +1,7 @@
 import uuid
 from django.db import models
 from django.contrib.gis.db import models as gis_models
-from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField, JSONField
 from states.workers import visualize_map
 
 # Create your models here.
@@ -88,16 +88,31 @@ class CensusBlock(models.Model):
     def __str__(self):
         return str(self.id)
 
-class SeedRedistrictMap(models.Model):
-    
+class Run(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField(max_length=255)
+    state = models.ForeignKey('State', on_delete=models.CASCADE)
+    districts = models.PositiveIntegerField()
+    running = models.BooleanField()
 
-    districts = models.IntegerField()
+    @property
+    def iterations(self):
+        return Event.objects.filter(run=self).count()
 
-    state = models.ForeignKey(State, on_delete=models.CASCADE)
-
-    initial_file = models.FileField(upload_to='redist/nx/', null=True)
-    
-    def __str__(self):
-        return self.title
+class Event(models.Model):
+    run = models.ForeignKey('Run', on_delete=models.SET_NULL, null=True)
+    type = models.CharField(
+        choices=(
+            ('move', 'Move'), 
+            ('fail', 'Move Failure'),
+            ('weight', 'Weight Update'),
+            ('burn start', 'Begin Burn in'),
+            ('burn end', 'End Burn in'),
+            ('anneal start', 'Begin Linear Simulated Annealing'),
+            ('anneal end', 'End Linear Simulated Annealing'),
+        )
+    )
+    weights = JSONField()
+    map = ArrayField(
+        models.IntegerField(),
+    )
+    scores = JSONField()
