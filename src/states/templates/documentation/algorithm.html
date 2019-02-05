@@ -1,0 +1,33 @@
+{% extends 'home/_base.html' %}
+{% load static %}
+
+{% block head %}
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+{% endblock %}
+
+{% block content %}
+<main role="main">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <br />
+        <h1>Algorithm Overview</h1>
+        <p>
+          This documentation describes the Metropolis-Hastings algorithm in the context of selecting redistrictings.
+          Documentation of the underlying data structures of Rakan and how to interact with them can be found on the
+          <a href="/documentation/api">API Guide</a> Page. Documentation of term definitions can be found
+          <a href="/documentation/">What is gerrymandering?</a> page. It is suggested you read the documentation in 
+          the order they're listed in the navigation.
+        </p>
+        <p>
+
+        </p>
+      </div>
+    </div>
+  </div>
+
+</main>
+{% endblock %}

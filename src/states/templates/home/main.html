@@ -1,0 +1,249 @@
+{% extends "home/_base.html" %}
+{% load static %}
+
+{% block home_active %}active{% endblock %}
+
+{% block head %}
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css' rel='stylesheet' />
+{% endblock %}
+
+
+{% block content %}
+<main role="main">
+
+  <!-- Main jumbotron for a primary marketing message or call to action -->
+  <div class="jumbotron">
+    <div class="container">
+      <h1 class="display-3">The Rakan Project</h1>
+      <h6>A Python/C++ Library for Analyzing Gerrymandering.</h6>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Example row of columns -->
+    <div class="row">
+      <div class="col-md-8">
+        <h2>Overview</h2>
+        <p>Rakan is the Washington eXperimental Mathematics Lab’s (WXML) effort to mathematically define and analyze
+          <a href="/documentation/">Gerrymandering</a>. Rakan generates redistrictings through a graph traversal using Markov Chains – specifically
+          the Metropolis-Hastings Algorithm. These sample redistrictings are submitted to this site’s API and then are
+          analyzed using a handful of metrics. Some metrics include population balance and district compactness.</p>
+        <p>
+          This research project is a continuation of <a href="https://services.math.duke.edu/~sb337/gerrymandering/">Duke's Gerrymandering Project</a>.
+        </p>
+        <!-- <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p> -->
+        <h2>State Data</h2>
+        <p>Rakan works by reading a <a href="https://networkx.github.io">Networkx Graph</a> representation of a state.
+          Collecting and encoding state information into these graphs is time consuming as there is no streamlined way
+          to accurately generate state graphs. Thus, a repository of states have been collected here.</p>
+        <p><a class="btn btn-secondary" href="/states/" role="button"> View
+            Available States &raquo;</a></p>
+        <!-- <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p> -->
+      </div>
+      <div class="col-md-4">
+        <h2>Download</h2>
+        <p>
+          Currently, Rakan is only available via Github. A C++ compiler is required to compile Rakan.
+        </p>
+        <p>
+          <a class="btn btn-success download btn-block" href="https://github.com/pengra/wxml/" target="_blank" role="button"><i
+              class="fab fa-github"></i> View Source &raquo;</a>
+        </p>
+        <h2>FAQ</h2>
+        <ul>
+          <li><a href="/documentation/">What is Gerrymandering?</a></li>
+          <li><a href="/documentation/algorithm/">How does Rakan Work (Mathematics)?</a></li>
+          <li><a href="/documentation/api/">How does Rakan Work (Computer Science)?</a></li>
+          <li><a href="/documentation/example/">How do I get started with Rakan?</a></li>
+        </ul>
+        <!-- <p>
+          <button class="btn btn-success download btn-block" disabled="disabled" href="#" target="_blank" role="button">View Example &raquo;</button>
+        </p> -->
+      </div>
+    </div>
+
+  </div> <!-- /container -->
+
+  <div class="container">
+    <br />
+    <br />
+    <div class="row">
+      <div class="col-md-12">
+        <h1>Rakan Features</h1>
+      </div>
+    </div>
+    <br />
+    <br />
+  </div>
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-12">
+        <h2>High Efficiency Markov Chains</h2>
+        <p>Rakan is able to create and record state redistrictings at high speeds.</p>
+        <p>
+          <pre><code><span style="color: #bada55;">pengra@wxml:~/rakan/$</span> ./run.sh iowa.dnx
+...
+Rakan is live. Type 'h' for help
+
+>>> <span style="color: #dab420;">1000</span>
+Walking 1000 steps |████████████████████████████████| 1000/1000
+Average iterations / second: 1069.8753458540998
+Average seconds / iteration: 0.0009346883296966553
+Total time:  0.9346883296966553
+Score change (old: 1.0, new: 1.0): 0.0
+Pop Score change (old: 83020015448.25, new: 63276451226.916664): -19743564221.333336
+Comp Score change (old: 82.67001114827201, new: 436.1132462459937): 353.4432350977217
+Population difference from ideal: 134.24%
+Precinct difference from ideal: 179.80%
+Rejection rate of last 1000 moves: 0.00%
+>>>
+</code></pre>
+        </p>
+      </div>
+
+      <div class="col-md-12">
+        <br />
+        <h2>Instant Visualization</h2>
+      </div>
+
+      <div class="col-md-6">
+        <p>Rakan is able to create visualizations of its current state on a localhost server.</p>
+        <p>
+          <pre><code><span style="color: #bada55;">pengra@wxml:~/rakan/$</span> ./run.sh iowa.dnx
+...
+Rakan is live. Type 'h' for help
+
+>>> <span style="color: #dab420;">r sample</span>
+Hit Ctrl + C at any time to break
+>>> <span style="color: #dab420;">1000</span>
+...
+>>> <span style="color: #dab420;">r sample2</span>
+Hit Ctrl + C at any time to break
+</code></pre>
+        </p>
+      </div>
+
+      <div class="col-md-6">
+        <div id='map' style="height: 100%;"></div>
+      </div>
+
+      <div class="col-md-12">
+        <br/>
+        <br/>
+        <h2>More Features</h2>
+        <br />
+      </div>
+
+      <div class="col-md-4 feature">
+        <div class="bd-placeholder-img rounded-circle">
+          <i class="fas fa-balance-scale" style="font-size: 120px"></i>
+          <br />
+        </div>
+        <h2>Dynamic Weights</h2>
+        <p>Prioritize features on the map by setting weights on various map metrics, such as compactness or population
+          balance.</p>
+      </div>
+
+      <div class="col-md-4 feature">
+        <img src="{% static 'showoff/iowa_sample.png' %}" height="120px" class="bd-placeholder-img rounded-circle" />
+        <h2>Image Generation</h2>
+        <p>Instantly spawn high resolution images of a redistricting for creating videos.</p>
+      </div>
+
+      <div class="col-md-4 feature">
+        <div class="bd-placeholder-img rounded-circle">
+          <i class="fas fa-magic" style="font-size: 120px"></i>
+          <br />
+        </div>
+        <h2>And More!</h2>
+        <p>
+          Rakan has other features, such as customizable walks, customizable scoring defintions, election simulations and built-in independence tests.
+        </p>
+        <p>
+          <a class="btn btn-secondary" href="https://github.com/pengra/wxml/" role="button"> View All of
+            Rakan's
+            Features
+            &raquo;</a></p>
+        <br />
+      </div>
+
+    </div>
+  </div>
+
+  </div> <!-- /container -->
+
+</main>
+
+<script>
+  mapboxgl.accessToken = 'pk.eyJ1Ijoibm9ydG9uanAiLCJhIjoiY2pyNWxjd25sMGZ4aTN6bzIwYTlleWJhMSJ9.TCtD0pLNE8IPnuLzEAtq-A';
+
+  var geojsonDump = [];
+  var moves = [];
+
+  var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/light-v9',
+    center: [-94.510843, 41.934908],
+    zoom: 5
+  });
+
+  map.on('load', function () {
+    $.getJSON("{% static 'showoff/iowa_sample.geojson' %}", function (data) {
+      geojsonDump = data;
+      map.addSource('precincts', {
+        type: 'geojson',
+        data: geojsonDump
+      })
+
+      map.addLayer({
+        "id": "precincts",
+        "type": "fill",
+        "source": 'precincts',
+        "layout": {},
+        'paint': {
+          'fill-color': {
+            property: "district",
+            stops: [
+              [0, "#001f3f"], // Navy
+              [1, "#3D9970"], // Olive
+              [2, "#FF851B"], // Orange
+              [3, "#85144b"], // Maroon
+              [4, "#AAAAAA"], // Silver
+              [5, "#0074D9"], // Blue
+              [6, "#2ECC40"], // Green
+              [7, "#FF4136"], // Red
+              [8, "#F012BE"], // Fuchsia
+              [9, "#111111"], // Black
+              [10, "#7FDBFF"], // Aqua
+              [11, "#FFDC00"], // Yellow
+              [12, "#B10DC9"], // Purple
+              [13, "#39CCCC"], // Teal
+              [14, "#01FF70"], // Lime
+            ]
+          },
+          'fill-opacity': 0.8
+        }
+      });
+
+      var popup = new mapboxgl.Popup({
+        closeButton: true,
+        closeOnClick: false
+      });
+
+      map.on('click', 'precincts', function (e) {
+        // Change the cursor style as a UI indicator.
+        map.getCanvas().style.cursor = 'pointer';
+
+        popup.setLngLat(e.lngLat)
+          .setHTML(e.features[0].properties.description)
+          .addTo(map);
+      });
+
+      console.log(map.getCanvas().toDataURL());
+    })
+  });
+</script>
+{% endblock %}

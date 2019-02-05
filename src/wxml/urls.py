@@ -16,14 +16,20 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
-from states.views import avail_maps_json, HomeView
 from django.conf.urls.static import static
 from wxml.settings import DEBUG, MEDIA_URL, MEDIA_ROOT
+from states.views import DataView, StateListView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', HomeView.as_view()),
-    path('.json', avail_maps_json),
+    path('', TemplateView.as_view(template_name='home/main.html')),
+    path('data/', DataView.as_view()),
+    path('states/', StateListView.as_view()),
+    path('documentation/', TemplateView.as_view(template_name='documentation/overview.html')),
+    path('documentation/algorithm/', TemplateView.as_view(template_name='documentation/algorithm.html')),
+    # case study link
+    # documentation
+    # features
 ]
 
 if DEBUG:

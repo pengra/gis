@@ -1,0 +1,36 @@
+/* Move down content because we have a fixed navbar that is 3.5rem tall */
+body {
+  padding-top: 3.5rem;
+}
+
+.jumbotron {
+  background: #fff;
+  background-position-x: right;
+  background-repeat: no-repeat;
+}
+
+.jumbotron .container {
+  text-align: center;
+}
+
+pre {
+  background: rgb(40, 44, 52);
+  color: #fff;
+  padding: 1em;
+}
+
+.feature {
+  text-align: center;
+}
+
+.feature p {
+  text-align: left;
+}
+
+tbody tr {
+  cursor: pointer;
+}
+
+tbody tr:hover {
+  background:#dee2e6
+}
