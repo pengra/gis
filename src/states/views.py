@@ -43,7 +43,7 @@ class APIView(TemplateView):
         runForm = CreateRunForm(request.POST)
         if runForm.is_valid():
             try:
-                state = State.objects.get(runForm.cleaned_data['state'])
+                state = State.objects.get(id=runForm.cleaned_data['state'])
             except State.DoesNotExist:
                 return JsonResponse({
                     "error": True,
