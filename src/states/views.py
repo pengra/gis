@@ -52,7 +52,10 @@ class APIView(TemplateView):
                     "message": "Invalid Run ID"
                 }, status=404)
             
-        import pdb; pdb.set_trace()
+        return JsonResponse({
+            "error": True,
+            "message": "Not implemented"
+        }, status=404)
 
     def createrun(self, request, *arkgs, **kwargs):
         runForm = CreateRunForm(request.POST)
