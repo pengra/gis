@@ -59,5 +59,5 @@ class CensusAdmin(admin.ModelAdmin):
 admin.site.register(models.State, StateAdmin)
 admin.site.register(models.StateSubsection, VTDAdmin)
 admin.site.register(models.CensusBlock, CensusAdmin)
-admin.site.register(models.SeedRedistrictMap)
+admin.site.register(models.Run)
 admin.site.register(models.County, CountyAdmin)
