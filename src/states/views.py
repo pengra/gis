@@ -1,7 +1,7 @@
 
 from django.views.generic import TemplateView
 from django.http import JsonResponse
-from states.models import Event, Run
+from states.models import Event, Run, State
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from states.forms import InitialForm, CreateRunForm, BulkEventPushForm
@@ -42,8 +42,16 @@ class APIView(TemplateView):
     def createrun(self, request, *arkgs, **kwargs):
         runForm = CreateRunForm(request.POST)
         if runForm.is_valid():
+            try:
+                state = State.objects.get(runForm.cleaned_data['state'])
+            except State.DoesNotExist:
+                return JsonResponse({
+                    "error": True,
+                    "message": "Invalid State"
+                }, status=404)
+
             run = Run.objects.create(
-                state=runForm.cleaned_data['state'],
+                state=state,
                 districts=runForm.cleaned_data['districts'],
                 running=True
             )
