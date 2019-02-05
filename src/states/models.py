@@ -109,7 +109,7 @@ class Event(models.Model):
             ('burn end', 'End Burn in'),
             ('anneal start', 'Begin Linear Simulated Annealing'),
             ('anneal end', 'End Linear Simulated Annealing'),
-        )
+        ), max_length=13
     )
     weights = JSONField()
     map = ArrayField(
