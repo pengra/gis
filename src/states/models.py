@@ -100,11 +100,15 @@ class Run(models.Model):
 
     @property
     def last_weight_string(self):
-        return ", ".join(["{}={}".format(key, item) for key, item in Event.objects.filter(run=self).last().weights.items()])
+        last = Event.objects.filter(run=self).last()
+        if last:
+            return ", ".join(["{}={}".format(key, item) for key, item in last.weights.items()])
 
     @property
     def last_percentages_string(self):
-        return ", ".join(["{}={}".format(key, item) for key, item in Event.objects.filter(run=self).last().scores['percentages'].items()])
+        last = Event.objects.filter(run=self).last()
+        if last:
+            return ", ".join(["{}={}".format(key, item) for key, item in last.scores['percentages'].items()])
 
 class Event(models.Model):
     run = models.ForeignKey('Run', on_delete=models.SET_NULL, null=True)
