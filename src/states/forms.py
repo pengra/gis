@@ -6,7 +6,7 @@ class InitialForm(forms.Form):
 
 class CreateRunForm(forms.Form):
     state = forms.IntegerField() # fips code
-    districts = models.IntegerField() # num of districts
+    districts = forms.IntegerField() # num of districts
 
 class BulkEventPushForm(forms.Form):
     run = forms.UUIDField() # event id
