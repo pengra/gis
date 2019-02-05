@@ -25,16 +25,30 @@ class StateListView(TemplateView):
 class APIView(TemplateView):
     template_name = "home/api.html"
 
+    def valid_code(self, code):
+        return code == 'default_code'  # TODO: Change this to os.getenv
+
     def post(self, request, *args, **kwargs):
         initial = InitialForm(request.POST)
-        if initial.is_valid() and initial.cleaned_data['code'] == 'default_code': # TODO: Change this to os.getenv
-            return JsonResponse(self.json(*args, **kwargs))
+        if initial.is_valid() and self.valid_code(initial.cleaned_data.get('code')):
+            mode = initial.cleaned_data.get('mode')
+            if mode == 'createrun':
+                return self.createrun(request, *args, **kwargs)
+            elif mode == 'bulkevent':
+                return self.bulkevent(request, *args, **kwargs)
+            # return JsonResponse(self.json(*args, **kwargs))
         return JsonResponse({"error": True, "message": "Unknown Operation/Invalid Code"}, status=400)
 
-    def json(self, *args, **kwargs):
-        return {
-            "error": False,
-            "message": "success",
-            "args": str(args),
-            "kwargs": str(kwargs)
-        }
+    def createrun(self, request, *arkgs, **kwargs):
+        runForm = CreateRunForm(request.POST)
+        if runForm.is_valid():
+            run = Run.objects.create(
+                state=runForm.cleaned_data['state'],
+                districts=runForm.cleaned_data['districts'],
+                running=True
+            )
+            return JsonResponse({
+                "error": False,
+                "message": "Run ID Created",
+                "id": run.id,
+            })
