@@ -1,6 +1,6 @@
 
 from django.views.generic import TemplateView
-
+from django.http import JsonResponse
 from states.models import Event, Run
 
 # from state.models import Run
@@ -17,3 +17,15 @@ class DataView(TemplateView):
 
 class StateListView(TemplateView):
     template_name = "home/states.html"
+
+class APIView(TemplateView):
+    template_name = "home/api.html"
+
+    def post(self, *args, **kwargs):
+        return JsonResponse(self.json(*args, **kwargs))
+
+    def json(self, *args, **kwargs):
+        return {
+            "args": args,
+            "kwargs": kwargs
+        }

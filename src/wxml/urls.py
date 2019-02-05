@@ -18,12 +18,13 @@ from django.urls import path
 from django.views.generic import TemplateView
 from django.conf.urls.static import static
 from wxml.settings import DEBUG, MEDIA_URL, MEDIA_ROOT
-from states.views import DataView, StateListView
+from states.views import DataView, StateListView, APIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='home/main.html')),
     path('data/', DataView.as_view()),
+    path('api/', APIView.as_view()),
     path('states/', StateListView.as_view()),
     path('documentation/', TemplateView.as_view(template_name='documentation/overview.html')),
     path('documentation/algorithm/', TemplateView.as_view(template_name='documentation/algorithm.html')),
