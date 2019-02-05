@@ -119,7 +119,6 @@ class Event(models.Model):
             ('move', 'Move'), 
             ('fail', 'Move Failure'),
             ('weight', 'Weight Update'),
-            ('burn start', 'Begin Burn in'),
             ('burn end', 'End Burn in'),
             ('anneal start', 'Begin Linear Simulated Annealing'),
             ('anneal end', 'End Linear Simulated Annealing'),

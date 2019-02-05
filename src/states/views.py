@@ -7,6 +7,7 @@ from django.utils.decorators import method_decorator
 from states.forms import InitialForm, CreateRunForm, BulkEventPushForm
 
 import pickle
+import threading
 
 # from state.models import Run
 
@@ -22,6 +23,28 @@ class DataView(TemplateView):
 
 class StateListView(TemplateView):
     template_name = "home/states.html"
+
+def create_events(self, events, run_id):
+    run = Run.objects.get(id=run_id)
+    db_events = Event.objects.filter(run=run)
+    if len(db_events) == 0 and events[0][0] != 'seed':
+        raise ValueError("No seed to start with")
+    if len(db_events):
+        seed = db_events.last().map
+    for event_type, scores, weights, data in events:
+        if event_type == 'seed':
+            seed = data
+            event_type = 'move'
+        elif event_type == 'move':
+            seed[data[0]] = data[1]
+        
+        Event.objects.create(
+            run=run,
+            type=event_type,
+            weights=weights,
+            map=seed,
+            scores=scores,
+        )
 
 @method_decorator(csrf_exempt, name='dispatch')
 class APIView(TemplateView):
@@ -51,11 +74,29 @@ class APIView(TemplateView):
                     "error": True,
                     "message": "Invalid Run ID"
                 }, status=404)
+            try:
+                events = pickle.loads(bulkForm.cleaned_data['file'].read())
+                for event_type, data in events:
+                    if not (event_type in ['seed', 'move', 'fail', 'weight', 'burn start', 'burn end', 'anneal start', 'anneal end']):
+                        raise pickle.UnpicklingError()
+            except pickle.UnpicklingError:
+                return JsonResponse({
+                    "error": True,
+                    "message": "Corrupted/Invalid pk3 file"
+                }, status=404)
             
+            create_events(event,s run.id)
+            # threading.Thread(target=lambda: create_events(events, run.id)).start()
+
+            return JsonResponse({
+                "error": False,
+                "message": "Analyzing Events"
+            }, status=202)
+
         return JsonResponse({
             "error": True,
-            "message": "Not implemented"
-        }, status=404)
+            "message": "Invalid Event POST Data",
+        }, status=400)
 
     def createrun(self, request, *arkgs, **kwargs):
         runForm = CreateRunForm(request.POST)
