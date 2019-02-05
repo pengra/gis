@@ -3,6 +3,7 @@ from django.views.generic import TemplateView
 from django.http import JsonResponse
 from states.models import Event, Run
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 # from state.models import Run
 
