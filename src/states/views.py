@@ -29,7 +29,7 @@ class APIView(TemplateView):
         initial = InitialForm(request.POST)
         if initial.is_valid() and initial.cleaned_data['code'] == 'default_code': # TODO: Change this to os.getenv
             return JsonResponse(self.json(*args, **kwargs))
-        return JsonResponse({"error": True, "message": "Unknown Operation/Invalid Code"}, status_code=400)
+        return JsonResponse({"error": True, "message": "Unknown Operation/Invalid Code"}, status=400)
 
     def json(self):
         return {
