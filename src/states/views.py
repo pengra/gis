@@ -24,7 +24,7 @@ class DataView(TemplateView):
 class StateListView(TemplateView):
     template_name = "home/states.html"
 
-def create_events(self, events, run_id):
+def create_events(events, run_id):
     run = Run.objects.get(id=run_id)
     db_events = Event.objects.filter(run=run)
     if len(db_events) == 0 and events[0][0] != 'seed':
