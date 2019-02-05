@@ -76,8 +76,8 @@ class APIView(TemplateView):
                 }, status=404)
             try:
                 events = pickle.loads(bulkForm.cleaned_data['file'].read())
-                for event_type, data in events:
-                    if not (event_type in ['seed', 'move', 'fail', 'weight', 'burn start', 'burn end', 'anneal start', 'anneal end']):
+                for log in events:
+                    if not (log[0] in ['seed', 'move', 'fail', 'weight', 'burn start', 'burn end', 'anneal start', 'anneal end']):
                         raise pickle.UnpicklingError()
             except pickle.UnpicklingError:
                 return JsonResponse({
