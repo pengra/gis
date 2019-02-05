@@ -6,6 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from states.forms import InitialForm, CreateRunForm, BulkEventPushForm
 
+import pickle
+
 # from state.models import Run
 
 # Create your views here.
@@ -39,6 +41,19 @@ class APIView(TemplateView):
             # return JsonResponse(self.json(*args, **kwargs))
         return JsonResponse({"error": True, "message": "Unknown Operation/Invalid Code"}, status=400)
 
+    def bulkevent(self, request, *args, **kwargs):
+        bulkForm = BulkEventPushForm(request.POST, request.FILES)
+        if bulkForm.is_valid():
+            try:
+                run = Run.objects.get(id=bulkForm.cleaned_data['run'])
+            except Run.DoesNotExist:
+                return JsonResponse({
+                    "error": True,
+                    "message": "Invalid Run ID"
+                }, status=404)
+            
+        import pdb; pdb.set_trace()
+
     def createrun(self, request, *arkgs, **kwargs):
         runForm = CreateRunForm(request.POST)
         if runForm.is_valid():
@@ -60,3 +75,8 @@ class APIView(TemplateView):
                 "message": "Run ID Created",
                 "id": run.id,
             })
+
+        return JsonResponse({
+            "error": True,
+            "message": "Invalid Run POST Data",
+        }, status=400)
