@@ -98,6 +98,14 @@ class Run(models.Model):
     def iterations(self):
         return Event.objects.filter(run=self).count()
 
+    @property
+    def last_weight_string(self):
+        return ", ".join(["{}={}".format(key, item) for key, item in Event.objects.filter(run=self).last().weights.items()])
+
+    @property
+    def last_percentages_string(self):
+        return ", ".join(["{}={}".format(key, item) for key, item in Event.objects.filter(run=self).last().scores['percentages'].items()])
+
 class Event(models.Model):
     run = models.ForeignKey('Run', on_delete=models.SET_NULL, null=True)
     type = models.CharField(
