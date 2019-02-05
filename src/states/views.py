@@ -28,6 +28,6 @@ class APIView(TemplateView):
 
     def json(self, *args, **kwargs):
         return {
-            "args": args,
-            "kwargs": kwargs
+            "args": str(args),
+            "kwargs": str(kwargs)
         }
