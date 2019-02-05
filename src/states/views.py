@@ -31,7 +31,7 @@ class APIView(TemplateView):
             return JsonResponse(self.json(*args, **kwargs))
         return JsonResponse({"error": True, "message": "Unknown Operation/Invalid Code"}, status=400)
 
-    def json(self):
+    def json(self, *args, **kwargs):
         return {
             "error": False,
             "message": "success",
