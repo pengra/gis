@@ -2,6 +2,7 @@
 from django.views.generic import TemplateView
 from django.http import JsonResponse
 from states.models import Event, Run
+from django.views.decorators.csrf import csrf_exempt
 
 # from state.models import Run
 
@@ -18,6 +19,7 @@ class DataView(TemplateView):
 class StateListView(TemplateView):
     template_name = "home/states.html"
 
+@method_decorator(csrf_exempt, name='dispatch')
 class APIView(TemplateView):
     template_name = "home/api.html"
 
