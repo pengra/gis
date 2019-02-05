@@ -109,7 +109,7 @@ class Run(models.Model):
     def last_percentages_string(self):
         last = Event.objects.filter(run=self).last()
         if last:
-            return ", ".join(["{}={}".format(key, item) for key, item in last.scores['percentages'].items()])
+            return ", ".join(["{}={}".format(key, item) for key, item in last.scores.items()])
         return "N/A"
 
 class Event(models.Model):
