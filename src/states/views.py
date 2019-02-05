@@ -85,7 +85,7 @@ class APIView(TemplateView):
                     "message": "Corrupted/Invalid pk3 file"
                 }, status=404)
             
-            create_events(event,s run.id)
+            create_events(events, run.id)
             # threading.Thread(target=lambda: create_events(events, run.id)).start()
 
             return JsonResponse({
