@@ -15,48 +15,91 @@
       <div class="col-md-12">
         <br />
         <h1>What is Gerrymandering?</h1>
+        <small>Disclosure: I’m not a lawyer.</small>
+        <h2>Precincts &amp; Districts</h2>
         <p>
-          Before we can define what Gerrymandering is, we begin with a crash course in how voting in the
-          United States works. The United States is not a democracy; rather it is a Republican Democracy.
-          Instead of citizens directly voting on issues, citizens vote on representatives that represent
-          their interests in the federal and state government.
+          Before we can define what gerrymandering is, we begin with a crash course in how voting in the United States
+          works. Note that the United States is not a democracy; rather it is a Republican Democracy. Instead of
+          citizens directly voting on issues, citizens vote on representatives that represent their interests in the
+          federal and state government.
+          <br />
+          During the United States’ youth, it was decided that the states split their geography into “precincts”
+          (synonymous to “voting district”). Precinct boundaries were drawn such that the voting population in each
+          precinct was roughly the same. These precincts were then grouped into “districts,” where districts were
+          subjected to similar requirements as precincts, but on a much larger scale. Each district had elected
+          individuals that would represent the interests of the area in the federal and state government.
+          <br />
+          For instance, Washington state has around 5,500 precincts, and only 10 congressional districts – and 10
+          representatives in Congress.
         </p>
+        <br />
+        <div class="offset-md-2 col-md-8">
+          <img src="{% static 'assets/wa_districts.png' %}" class="img-fluid" />
+          <small>Source: <a target="_blank" href="https://en.wikipedia.org/wiki/Washington's_congressional_districts">Wikipedia</a></small>
+        </div>
+        <br />
+        <h2>Redistricting</h2>
         <p>
-          During the United States’ youth, it was decided that the states split their geography into
-          “precincts” (synonymous to “voting district”). Precinct boundaries were drawn such that the voting
-          population in each precinct was roughly the same. These precincts were then grouped into
-          “districts,” where districts were subjected to similar requirements as precincts, but on a much
-          larger scale. Each district had elected individuals that would represent the interests of the area
-          in the federal and state government.
+          As states shift in population sizes, states are granted more districts (or lose districts if the population
+          shrinks). Additionally, states must balance the populations between districts between growing cities and/or
+          growing rural areas. When this occurs, the state is tasked with redrawing district lines. This process is
+          known as redistricting.
+          <br />
+          Redistricting policies vary from state to state. Some states have a non-partisan committee, while other
+          states have the ruling party draw district lines (what could go wrong here?). Other states may have other
+          policies.
         </p>
+        <br />
+        <h2>Some Legal Redistricting Criteria</h2>
         <p>
-          As early as 1812, it became apparent that by simply changing the boundaries of districts, elected
-          officials could maintain their power – even if most voters didn’t vote for them. The <a target="_blank" href="https://www.washingtonpost.com/news/wonk/wp/2015/03/01/this-is-the-best-explanation-of-gerrymandering-you-will-ever-see/?utm_term=.00faa9d0f919">Huffington
-            Post</a> infographic below demonstrates how this is possible.
+          There are currently a few federal redistricting requirements.
+          <ol>
+            <li>Representatives are to <a href="https://scholar.google.com/scholar_case?case=6357954371173516293"
+                target="_blank"></a>“be elected by districts composed of contiguous territory”</a> (and only one
+              representative per district)</li>
+            <li>Districts are to have <a href="https://scholar.google.com/scholar_case?case=6357954371173516293" target="_blank">“as
+                nearly as practicable an equal number of inhabitants”</a></li>
+            <li>Racial and ethnic minorities in states must be able <a href="https://www.law.cornell.edu/uscode/text/52/10301"
+                target="_blank">“to participate in the political process and to
+                elect representatives of their choice.”</a></li>
+          </ol>
+          <br />
+          The last two requirements aren’t hard rules. There have been exceptions to both rules. Typically speaking,
+          districts with even a 1% disparity are constitutionally suspicious, and may be rejected by the courts for
+          being unconstitutional.
+          <br />
+          Additionally, if a minority population in a state is naturally diluted, and designing districts to force a
+          minority majority in one district is impracticable, the requirement may be dropped.
+          <br />
+          More about the requirements of legal redistricting can be found <a href="http://redistricting.lls.edu/where.php">here</a>
+        </p>
+        <br />
+        <h2>Gerrymandering</h2>
+        <p>
+          As early as 1812, it became apparent that certain redistrictings, ensured elected officials could maintain
+          their power – even if most voters didn’t vote for them. The Huffington Post infographic below demonstrates
+          how this is possible.
+        </p>
+        <br />
+        <div class="offset-md-2 col-md-8">
+          <img src="https://img.washingtonpost.com/wp-apps/imrs.php?src=https://img.washingtonpost.com/blogs/wonkblog/files/2015/03/gerry.png&w=1484"
+            class="img-fluid" />
+          <small>Source: <a target="_blank" href="https://www.washingtonpost.com/news/wonk/wp/2015/03/01/this-is-the-best-explanation-of-gerrymandering-you-will-ever-see/?utm_term=.00faa9d0f919">Huffington
+              Post</a></small>
+        </div>
+        <br />
+        <p>
+          As the infographic portrays, gerrymandering is the act of reducing competitiveness of districts to benefit a
+          single party. Blatant gerrymandering is typically easy to spot, for instance, in the years 1993 - 1999, North
+          Carolina’s 12th district was a textbook example of gerrymandering.
         </p>
 
         <p>
           <div class="offset-md-2 col-md-8">
-            <img src="https://img.washingtonpost.com/wp-apps/imrs.php?src=https://img.washingtonpost.com/blogs/wonkblog/files/2015/03/gerry.png&w=1484"
-              class="img-fluid" />
-            <small>Source: <a target="_blank" href="https://www.washingtonpost.com/news/wonk/wp/2015/03/01/this-is-the-best-explanation-of-gerrymandering-you-will-ever-see/?utm_term=.00faa9d0f919">Huffington
-                Post</a></small>
-          </div>
-        </p>
-
-        <p>
-          Of course, in the real world, precincts are squares and states aren’t rectangles. Obvious
-          gerrymandering typically takes the form of strange “spaghetti”-ish figures. Take for instance this
-          district in Pennsylvania.
-        </p>
-
-        <p>
-          <div class="offset-md-2 col-md-8">
-            <img src="https://img.washingtonpost.com/blogs/wonkblog/files/2015/02/Screen-Shot-2015-02-28-at-11.36.16-PM.png"
+            <img src="https://en.wikipedia.org/wiki/North_Carolina's_congressional_districts#/media/File:United_States_Congressional_Districts_in_North_Carolina_(metro_highlight),_1993_–_1998.tif"
               class="img-fluid" />
             <br />
-            <small>Source: <a target="_blank" href="https://www.washingtonpost.com/news/wonk/wp/2015/03/01/this-is-the-best-explanation-of-gerrymandering-you-will-ever-see/?utm_term=.00faa9d0f919">Huffington
-                Post</a></small>
+            <small>Source: <a target="_blank" href="https://en.wikipedia.org/wiki/North_Carolina's_congressional_districts">Wikipedia</a></small>
           </div>
         </p>
 
@@ -66,7 +109,7 @@
           project, to mathematically define gerrymandering.
         </p>
 
-        <h2>Assumptions &amp; Definitions</h2>
+        <h2>Rakan's Assumptions &amp; Definitions</h2>
         <p>
           For Rakan's purposes, for a redistricting to be "legal" it must fulfill the following conditions:
           <ul>
@@ -90,8 +133,10 @@
               have roughly $\frac{1}{n}$ th of the total population in each district.</li>
           </ul>
           The goal of Rakan isn't to find the optimal solution given these "good" parameters (<a href="https://www.washingtonpost.com/news/wonk/wp/2014/06/03/this-computer-programmer-solved-gerrymandering-in-his-spare-time/?noredirect=on&utm_term=.0624df83f70f"
-            target="_blank">It's already been "found"</a>). Rather, project Rakan's goal is to determine
-          the probability that a given redistricting is gerrymandered.
+            target="_blank">It's already been "found"</a>). Rather, Rakan hopes to be able to determine the probability
+          of a redistricting being gerrymandered. This is achieved by comparing a redistricting in question to other
+          possible redistrictings and measuring how it performs in a handful of metrics defined by legal requirements
+          and by user defined metric requirements.
         </p>
         <p>
 
