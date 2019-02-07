@@ -19,11 +19,59 @@
           This documentation describes the Metropolis-Hastings algorithm in the context of selecting redistrictings.
           Documentation of the underlying data structures of Rakan and how to interact with them can be found on the
           <a href="/documentation/api">API Guide</a> Page. Documentation of term definitions can be found
-          <a href="/documentation/">What is gerrymandering?</a> page. It is suggested you read the documentation in 
+          <a href="/documentation/">What is gerrymandering?</a> page. It is suggested you read the documentation in
           the order they're listed in the navigation.
         </p>
-        <p>
 
+        <h2>Step 1: Represent Precincts as Graph Nodes</h2>
+        <p>
+          The first step is to construct a graph, where each node represents a precinct, where an edge is placed
+          between two nodes if they're physically bordering each other.
+          <br /><br />
+          Let the ordered list $g$ represent the graph, where $g_i$ is the $i$th precinct in the graph.
+        </p>
+
+        <h2>Step 2: Attach Meta Data to Vertexes</h2>
+        <p>
+          Each node (precinct) has meta data, specifically population and political demographic information. The exact
+          details of what's encoded can be found on the <a href="/states/">state data</a> page.
+          <br />
+          <br />
+          Let the ordered list $p$ represent populations, where $p_i$ describes the population of $g_i$. Similarly, let
+          $d$ be an ordered list, where $d_i$ notes which district $g_i$ is in.
+        </p>
+
+        <h2>Step 3: Define Graph Scoring Methodology</h2>
+        <p>
+          The graph, $g$, - and given the meta data defined in $p$ and $d$ - is now able to be scored. A score is
+          defined in such a way to describe the "good"ness of $g$.
+        </p>
+        <h3>Compactness Score</h3>
+        <p>
+          The goal is to rate a graph with long snaking districts poorly; or create a scoring system that is maximized
+          when the area to perimeter ratio is maximized. In $g$, an area of a district is defined by the number of
+          nodes it contains. A perimeter, is defined by the number of edges that connect the district and different
+          districts.
+          <br /><br />
+          The compactness score of $g$ should ideally rate district borders with long snaking patterns poorly. Such a
+          scoring method could be defined as the <strong>inverse</strong> of:
+          <br /><br />
+          $$C(g) = \sum^{\text{districts}} {{{\text{perimeter}}^2}\over{\text{area}}}$$
+        </p>
+        <h3>Population Balance Score</h3>
+        <p>
+          Population balance scores are measured in standard deviations. Given $g$ and $p$, the standard deviation of
+          the total population is the following:
+          <br /><br />
+          $$\sigma(g)^2 = {1\over{|g| - 1}} \sum_{i = 1}^{|G|} {(p_i - \bar{p})^2}$$
+        </p>
+        <h3>Combining Scores</h3>
+        <p>
+          The scoring functions $\sigma$ and $C$ describe "bad"ness of $g$. Thus the lower the score, the better $g$
+          is. Additionally, each component of $\text{score}(g)$ is given a weight, notated as $\alpha$ and $\beta$.
+          <br/>
+          <br/>
+          $$ \text{score}(g) = \exp{(-(\alpha C(g) + \beta \sigma (g)))}$$
         </p>
       </div>
     </div>
