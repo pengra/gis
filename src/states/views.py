@@ -25,31 +25,34 @@ class StateListView(TemplateView):
     template_name = "home/states.html"
 
 def create_events():
-    if ProcessQueue.objects.filter(status='running'):
-        return
-    target = ProcessQueue.objects.filter(status='queued').order_by('queued').first()
-    run = target.run
-    db_events = Event.objects.filter(run=run)
-    events = target.payload
+    # A terrible way to queue things up. But it'll do the job for this small scale project.
+    while not ProcessQueue.objects.filter(status='running'):
+        target = ProcessQueue.objects.filter(status='queued').order_by('queued').first()
+        run = target.run
+        db_events = Event.objects.filter(run=run)
+        events = target.payload
 
-    if len(db_events) == 0 and events[0][0] != 'seed':
-        raise ValueError("No seed to start with")
-    if len(db_events):
-        seed = db_events.last().map
-    for event_type, scores, weights, data in events:
-        if event_type == 'seed':
-            seed = data
-            event_type = 'move'
-        elif event_type == 'move':
-            seed[data[0]] = data[1]
+        if len(db_events) == 0 and events[0][0] != 'seed':
+            raise ValueError("No seed to start with")
+        if len(db_events):
+            seed = db_events.last().map
+        for event_type, scores, weights, data in events:
+            if event_type == 'seed':
+                seed = data
+                event_type = 'move'
+            elif event_type == 'move':
+                seed[data[0]] = data[1]
+            
+            Event.objects.create(
+                run=run,
+                type=event_type,
+                weights=weights,
+                map=seed,
+                scores=scores,
+            )
         
-        Event.objects.create(
-            run=run,
-            type=event_type,
-            weights=weights,
-            map=seed,
-            scores=scores,
-        )
+        target.status = 'done'
+        target.save()
 
 @method_decorator(csrf_exempt, name='dispatch')
 class APIView(TemplateView):
