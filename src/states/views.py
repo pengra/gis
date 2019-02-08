@@ -1,10 +1,10 @@
 
 from django.views.generic import TemplateView
 from django.http import JsonResponse
-from states.models import Event, Run, State
+from states.models import Event, Run, State, ProcessQueue
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from states.forms import InitialForm, CreateRunForm, BulkEventPushForm, ProcessQueue
+from states.forms import InitialForm, CreateRunForm, BulkEventPushForm
 
 import pickle
 import threading
