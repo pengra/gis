@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from states.forms import InitialForm, CreateRunForm, BulkEventPushForm
 
+import json
 import pickle
 import threading
 
@@ -96,6 +97,13 @@ class APIView(TemplateView):
                 }, status=404)
             
             # create_events(events, run.id)
+
+            ProcessQueue.objects.create(
+                status='queued',
+                run=run,
+                payload=json.dumps(events)
+            )
+
             threading.Thread(target=lambda: create_events()).start()
 
             return JsonResponse({
