@@ -145,4 +145,4 @@ class ProcessQueue(models.Model):
     )
     run = models.ForeignKey(Run, on_delete=models.CASCADE)
     payload = JSONField()
-    queued = models.TimeDateField(auto_now_add=True)
+    queued = models.DateTimeField(auto_now_add=True)
