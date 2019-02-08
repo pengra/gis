@@ -138,7 +138,7 @@ class ProcessQueue(models.Model):
         choices=(
             ('queued', 'Queued'),
             ('running', 'Running'),
-            ('done', 'Done')
+            ('done', 'Done'),
             ('fail', 'Failed')
         ),
         max_length=7
