@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from states.models import Event, Run, State
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from states.forms import InitialForm, CreateRunForm, BulkEventPushForm
+from states.forms import InitialForm, CreateRunForm, BulkEventPushForm, ProcessQueue
 
 import pickle
 import threading
@@ -24,9 +24,14 @@ class DataView(TemplateView):
 class StateListView(TemplateView):
     template_name = "home/states.html"
 
-def create_events(events, run_id):
-    run = Run.objects.get(id=run_id)
+def create_events():
+    if ProcessQueue.objects.filter(status='running'):
+        return
+    target = ProcessQueue.objects.filter(status='queued').order_by('queued').first()
+    run = target.run
     db_events = Event.objects.filter(run=run)
+    events = target.payload
+
     if len(db_events) == 0 and events[0][0] != 'seed':
         raise ValueError("No seed to start with")
     if len(db_events):
@@ -86,7 +91,7 @@ class APIView(TemplateView):
                 }, status=404)
             
             # create_events(events, run.id)
-            threading.Thread(target=lambda: create_events(events, run.id)).start()
+            threading.Thread(target=lambda: create_events()).start()
 
             return JsonResponse({
                 "error": False,

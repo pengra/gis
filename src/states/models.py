@@ -120,8 +120,6 @@ class Event(models.Model):
             ('fail', 'Move Failure'),
             ('weight', 'Weight Update'),
             ('burn end', 'End Burn in'),
-            ('anneal start', 'Begin Linear Simulated Annealing'),
-            ('anneal end', 'End Linear Simulated Annealing'),
         ), max_length=13
     )
     weights = JSONField()
@@ -129,3 +127,21 @@ class Event(models.Model):
         models.IntegerField(),
     )
     scores = JSONField()
+
+    @property
+    def democratic_win(self):
+        return self.scores['democrat_seats'] > self.scores['republican_seats']
+
+
+class ProcessQueue(models.Model):
+    status = models.CharField(
+        choices=(
+            ('queued', 'Queued'),
+            ('running', 'Running'),
+            ('done', 'Done')
+        ),
+        max_length=7
+    )
+    run = models.ForeignKey(Run, on_delete=models.CASCADE)
+    payload = JSONField()
+    queued = models.TimeDateField(auto_now_add=True)
