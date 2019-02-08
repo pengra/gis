@@ -34,6 +34,8 @@ def create_events():
 
         if len(db_events) == 0 and events[0][0] != 'seed':
             raise ValueError("No seed to start with")
+            target.status = 'fail'
+            target.save()
         if len(db_events):
             seed = db_events.last().map
         for event_type, scores, weights, data in events:
