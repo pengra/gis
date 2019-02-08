@@ -29,9 +29,12 @@ def create_events():
     # A terrible way to queue things up. But it'll do the job for this small scale project.
     while not ProcessQueue.objects.filter(status='running'):
         target = ProcessQueue.objects.filter(status='queued').order_by('queued').first()
+        target.status = 'running'
+        target.save()
+        
         run = target.run
         db_events = Event.objects.filter(run=run)
-        events = target.payload
+        events = json.loads(target.payload)
 
         if len(db_events) == 0 and events[0][0] != 'seed':
             raise ValueError("No seed to start with")
