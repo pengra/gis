@@ -94,7 +94,7 @@ def data_detail_json(request, id):
                 "type": event.type,
                 "d_win": event.democratic_win,
                 "r_win": event.republican_win,
-            } for event in events[min_:max_]
+            } for event in events[min_:max_:step]
         ]
     }, status=200)
 
