@@ -23,7 +23,7 @@
     <div class="row">
       <br />
       <div class="col-md-6">
-        <form class="form-inline">
+        <div class="form-inline">
           <div class="form-group mb-2">
             <label for="inputMin" class="sr-only">Minimum Iteration</label>
             <input type="number" class="form-control" id="inputMin" value="0">
@@ -32,8 +32,8 @@
             <label for="inputMax" class="sr-only">Maximum Iteration</label>
             <input type="number" class="form-control" id="inputMax" value="{{run.iterations}}">
           </div>
-          <button type="submit" class="btn btn-primary mb-2" onclick="loadData($('#inputMin').val(), $('#inputMax').val())">Reload Page</button>
-        </form>
+          <button class="btn btn-primary mb-2" onclick="loadData($('#inputMin').val(), $('#inputMax').val())">Reload Page</button>
+        </div>
       </div>
       <div class="col-md-6">
 
