@@ -5,6 +5,7 @@ from states.models import Event, Run, State, ProcessQueue
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from states.forms import InitialForm, CreateRunForm, BulkEventPushForm
+from django.shortcuts import get_object_or_404
 
 import json
 import pickle
@@ -21,11 +22,17 @@ class DataView(TemplateView):
         context = super().get_context_data(*args, **kwargs)
         context['runs'] = Run.objects.all()
         context['tasks'] = ProcessQueue.objects.filter(status='queued').count()
-        context['working'] = ProcessQueue.objects.filter(status='')
+        context['working'] = ProcessQueue.objects.filter(status='running')
         return context
 
 class DataDetailView(TemplateView):
     template_name = "home/dash.html"
+
+    def get_context_data(self, id, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['run'] = get_object_or_404(Run, id=id)
+        return context
+
 
 class StateListView(TemplateView):
     template_name = "home/states.html"
