@@ -57,12 +57,12 @@
         .attr("width", "100%")
         .attr("height", "50vh")
       .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     
     // 3. Call the x axis in a group tag
     svg.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
+        // .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
     
     // 4. Call the y axis in a group tag
