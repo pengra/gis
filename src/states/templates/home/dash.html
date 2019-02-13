@@ -33,79 +33,90 @@
 <script>
   var run_id = "{{run.id}}";
 
-  var margin = {
-    top: 50,
-    right: 50,
-    bottom: 50,
-    left: 50
-  };
-  var width = $('#graph').width(); // Use the bootstrap col-12's width 
-  var height = (window.innerHeight / 2); // Use half the window's height
+  fetch(`/data/${run_id}.json`)
+    .then((response) => response.json())
+    .then(
+      (json) => {
+        dataset = json.data.map((e) => {
+          return {
+            "y": e.scores.population
+          }
+        })
+        drawGraph();
+      }
+    )
 
-  // The number of datapoints
-  var n = 500;
+  var drawGraph = function () {
+    var margin = {
+      top: 50,
+      right: 50,
+      bottom: 50,
+      left: 50
+    };
+    var width = $('#graph').width(); // Use the bootstrap col-12's width 
+    var height = (window.innerHeight / 2); // Use half the window's height
 
-  // X scale will use the index of our data
-  var xScale = d3.scaleLinear()
-    .domain([0, n - 1]) // input
-    .range([0, width]); // output
+    // The number of datapoints
+    var n = 500;
 
-  // Y scale will use the randomly generated number 
-  var yScale = d3.scaleLinear()
-    .domain([0, 1]) // input 
-    .range([height, 0]); // output 
+    // X scale will use the index of our data
+    var xScale = d3.scaleLinear()
+      .domain([0, n - 1]) // input
+      .range([0, width]); // output
 
-  // d3's line generator
-  var line = d3.line()
-    .x(function (d, i) {
-      return xScale(i);
-    }) // set the x values for the line generator
-    .y(function (d) {
-      return yScale(d.y);
-    }) // set the y values for the line generator 
+    // Y scale will use the randomly generated number 
+    var yScale = d3.scaleLinear()
+      .domain([0, 1]) // input 
+      .range([height, 0]); // output 
+
+    // d3's line generator
+    var line = d3.line()
+      .x(function (d, i) {
+        return xScale(i);
+      }) // set the x values for the line generator
+      .y(function (d) {
+        return yScale(d.y);
+      }) // set the y values for the line generator 
     // .curve(d3.curveMonotoneX) // apply smoothing to the line
 
-  // An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
-  var dataset = [];
+    // An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
+    var dataset = [];
 
-  fetch(`/data/${run_id}.json`).then((response) => response.json()).then(
-    (json) => {
-      dataset = json.data.map((e) => {return {"y": e.scores.population}})
-    }
-  )
 
-  // var dataset = d3.range(n).map(function (d) {
-  //   return {
-  //     "y": d3.randomUniform(1)()
-  //   }
-  // })
 
-  // Add the SVG to the page
-  var svg = d3.select("#graph").append("svg")
-    .attr("width", width + margin.right + margin.left)
-    .attr("height", height + margin.bottom + margin.top)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    // var dataset = d3.range(n).map(function (d) {
+    //   return {
+    //     "y": d3.randomUniform(1)()
+    //   }
+    // })
 
-  // Call the x axis in a group tag
-  svg.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
+    // Add the SVG to the page
+    var svg = d3.select("#graph").append("svg")
+      .attr("width", width + margin.right + margin.left)
+      .attr("height", height + margin.bottom + margin.top)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  // Call the y axis in a group tag
-  svg.append("g")
-    .attr("class", "y axis")
-    .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
+    // Call the x axis in a group tag
+    svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
 
-  // Append the path, bind the data, and call the line generator 
-  svg.append("path")
-    .datum(dataset) // 10. Binds data to the line 
-    .attr("class", "line") // Assign a class for styling 
-    .attr("d", line); // 11. Calls the line generator 
+    // Call the y axis in a group tag
+    svg.append("g")
+      .attr("class", "y axis")
+      .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
 
-  // Appends a dot for each datapoint 
-  svg.selectAll(".dot")
-    .data(dataset)
+    // Append the path, bind the data, and call the line generator 
+    svg.append("path")
+      .datum(dataset) // 10. Binds data to the line 
+      .attr("class", "line") // Assign a class for styling 
+      .attr("d", line); // 11. Calls the line generator 
+
+    // Appends a dot for each datapoint 
+    svg.selectAll(".dot")
+      .data(dataset)
+  }
 </script>
 {% endblock %}
