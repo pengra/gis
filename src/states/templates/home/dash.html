@@ -122,7 +122,7 @@
         .attr("class", "dot") // Assign a class for styling
         .attr("cx", function(d, i) { return xScale(i) })
         .attr("cy", function(d) { return yScale(d.y) })
-        .attr("r", function(d, i) { return political_colors[i] == 'blue' ? 1 : 0 });
+        .attr("r", function(d, i) { return political_colors[i] == 'blue' ? 3 : 0 });
 
     // Append the path, bind the data, and call the line generator 
     svg.append("path")
