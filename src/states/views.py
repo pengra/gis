@@ -12,8 +12,6 @@ import json
 import pickle
 import threading
 
-# from state.models import Run
-
 # Create your views here.
 
 
