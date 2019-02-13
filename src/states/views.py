@@ -22,7 +22,7 @@ class DataView(TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['runs'] = Run.objects.all()
-        context['tasks'] = ProcessQueue.objects.filter(status='queued').count()
+        context['tasks'] = ProcessQueue.objects.filter(status='queued').count() + 1
         context['working'] = ProcessQueue.objects.filter(status='running')
         return context
 
