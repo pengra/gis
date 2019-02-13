@@ -16,15 +16,18 @@ import threading
 
 # Create your views here.
 
+
 class DataView(TemplateView):
     template_name = "home/data.html"
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['runs'] = Run.objects.all()
-        context['tasks'] = ProcessQueue.objects.filter(status='queued').count() + 1
+        context['tasks'] = ProcessQueue.objects.filter(
+            status='queued').count() + 1
         context['working'] = ProcessQueue.objects.filter(status='running')
         return context
+
 
 class DataDetailView(TemplateView):
     template_name = "home/dash.html"
@@ -34,8 +37,8 @@ class DataDetailView(TemplateView):
         context['run'] = get_object_or_404(Run, id=id)
         return context
 
-def data_detail_json(request, id):
 
+def data_detail_json(request, id):
     try:
         run = Run.objects.get(id=id)
     except:
@@ -44,7 +47,7 @@ def data_detail_json(request, id):
             'message': 'Invalid Run ID'
         }, status=404)
     events = Event.objects.filter(run=run)
-    
+
     min_ = request.GET.get('min', 0)
     max_ = request.GET.get('max', len(events))
 
@@ -66,13 +69,16 @@ def data_detail_json(request, id):
         ]
     }, status=200)
 
+
 class StateListView(TemplateView):
     template_name = "home/states.html"
+
 
 def create_events():
     # A terrible way to queue things up. But it'll do the job for this small scale project.
     while not ProcessQueue.objects.filter(status='running'):
-        target = ProcessQueue.objects.filter(status='queued').order_by('queued').first()
+        target = ProcessQueue.objects.filter(
+            status='queued').order_by('queued').first()
         target.status = 'running'
         target.save()
 
@@ -92,7 +98,7 @@ def create_events():
                 event_type = 'move'
             elif event_type == 'move':
                 seed[data[0]] = data[1]
-            
+
             Event.objects.create(
                 run=run,
                 type=event_type,
@@ -100,9 +106,10 @@ def create_events():
                 map=seed,
                 scores=scores,
             )
-        
+
         target.status = 'done'
         target.save()
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class APIView(TemplateView):
@@ -142,7 +149,7 @@ class APIView(TemplateView):
                     "error": True,
                     "message": "Corrupted/Invalid pk3 file"
                 }, status=404)
-            
+
             # create_events(events, run.id)
 
             ProcessQueue.objects.create(
