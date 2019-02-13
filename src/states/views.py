@@ -35,6 +35,7 @@ class DataDetailView(TemplateView):
         return context
 
 def data_detail_json(request, id):
+
     try:
         run = Run.objects.get(id=id)
     except:
@@ -43,8 +44,16 @@ def data_detail_json(request, id):
             'message': 'Invalid Run ID'
         }, status=404)
     events = Event.objects.filter(run=run)
+    
+    min_ = request.GET.get('min', 0)
+    max_ = request.GET.get('max', len(events))
+
     return JsonResponse({
         'error': False,
+        'meta': {
+            'min': min_,
+            'max': max_,
+        },
         'data': [
             {
                 "map": event.map,
@@ -53,7 +62,7 @@ def data_detail_json(request, id):
                 "type": event.type,
                 "d_win": event.democratic_win,
                 "r_win": event.republican_win,
-            } for event in events
+            } for event in events[min_:max_]
         ]
     }, status=200)
 
