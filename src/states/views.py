@@ -44,7 +44,7 @@ def data_detail_json(request, id):
         }, status=404)
     return JsonResponse({
         'error': False,
-        'data': serializers.serialize('json', Event.objects.filter(run=run)))
+        'data': serializers.serialize('json', Event.objects.filter(run=run))
     }, status=200)
 
 class StateListView(TemplateView):
