@@ -24,7 +24,7 @@ class DataView(TemplateView):
         context['working'] = ProcessQueue.objects.filter(status='')
         return context
 
-class DataDetailView(Templateview):
+class DataDetailView(TemplateView):
     template_name = "home/dash.html"
 
 class StateListView(TemplateView):
