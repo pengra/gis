@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from states.forms import InitialForm, CreateRunForm, BulkEventPushForm
 from django.shortcuts import get_object_or_404
+from django.core import serializers
 
 import json
 import pickle
@@ -33,6 +34,18 @@ class DataDetailView(TemplateView):
         context['run'] = get_object_or_404(Run, id=id)
         return context
 
+def data_detail_json(request, id):
+    try:
+        run = Run.objects.get(id=id)
+    except:
+        return JsonResponse({
+            'error': True,
+            'message': 'Invalid Run ID'
+        }, status=404)
+    return JsonResponse({
+        'error': False,
+        'data': serializers.serialize('json', Event.objects.filter(run=run)))
+    }, status=200)
 
 class StateListView(TemplateView):
     template_name = "home/states.html"
