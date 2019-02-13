@@ -3,6 +3,8 @@
 
 {% block head %}
 <script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+  crossorigin="anonymous"></script>
 <link href="{% static 'graphs/d3.css' %}" rel='stylesheet' />
 {% endblock %}
 
@@ -19,8 +21,17 @@
     </div>
     <!-- Awesome graph -->
     <div class="row">
+      <div class="col-md-12">
+        <label for="amount">Price range:</label>
+        <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+      </div>
       <div class="col-md-12" id="graph">
+        <br />
         <h2 id="graph-title">Population Scores</h2>
+        <p>
+          Red dots represent republican majorities. Blue dots represent democratic majorities. No dot represents no
+          majority.
+        </p>
       </div>
     </div>
     <!-- Table of values w/ slider -->
@@ -33,11 +44,38 @@
 </main>
 
 <script>
+  $(function () {
+    $("#slider-range").slider({
+      range: true,
+      min: 0,
+      max: 500,
+      values: [75, 300],
+      slide: function (event, ui) {
+        $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+      }
+    });
+    $("#amount").val("$" + $("#slider-range").slider("values", 0) +
+      " - $" + $("#slider-range").slider("values", 1));
+  });
+</script>
+
+<script>
   var run_id = "{{run.id}}";
 
   fetch(`/data/${run_id}.json`)
     .then((response) => response.json())
     .then((json) => {
+      $('#slider-range').slikder({
+        range: true,
+        min: json.meta.min,
+        max: json.meta.max,
+        values: [json.meta.min, json.meta.max],
+        slide: function(e, ui) {
+          $('#amount').val("" + ui.values[0] + ' - ' + ui.values[1]);
+        }
+      });
+      $('#amount').val("" + $("#slider-range").slider("values", 0) + " - " + $("#slider-range").slider("values", 1));
+      
       min = 0
       max = 0
       political_colors = []
@@ -117,12 +155,20 @@
     // Add background colors indicating political outcome
     // 12. Appends a circle for each datapoint 
     svg.selectAll(".dot")
-        .data(dataset)
+      .data(dataset)
       .enter().append("circle") // Uses the enter().append() method
-        .attr("cx", function(d, i) { return xScale(i) })
-        .attr("cy", function(d) { return yScale(d.y) })
-        .attr("r", function(d, i) { return political_colors[i] == 'grey' ? 0 : 3 })
-        .attr("class", function(d, i) { return ("dot " + political_colors[i]) })
+      .attr("cx", function (d, i) {
+        return xScale(i)
+      })
+      .attr("cy", function (d) {
+        return yScale(d.y)
+      })
+      .attr("r", function (d, i) {
+        return political_colors[i] == 'grey' ? 0 : 3
+      })
+      .attr("class", function (d, i) {
+        return ("dot " + political_colors[i])
+      })
 
     // Append the path, bind the data, and call the line generator 
     svg.append("path")
@@ -132,8 +178,8 @@
       .attr("stroke", (d, i) => {
         return political_colors[i]
       });
-    
-    
+
+
 
     // Appends a dot for each datapoint 
     svg.selectAll(".dot")
