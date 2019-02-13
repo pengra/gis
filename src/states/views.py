@@ -50,7 +50,8 @@ def data_detail_json(request, id):
                 "map": event.map,
                 "weights": event.weights,
                 "scores": event.scores,
-                "type": event.type
+                "type": event.type,
+                "win": "d" if event.democratic_win else "r"
             } for event in events
         ]
     }, status=200)
