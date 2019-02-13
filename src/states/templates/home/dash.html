@@ -32,6 +32,7 @@
 
 <script>
   var run_id = "{{run.id}}";
+  var dataset = [];
 
   fetch(`/data/${run_id}.json`)
     .then((response) => response.json())
@@ -80,9 +81,6 @@
     // .curve(d3.curveMonotoneX) // apply smoothing to the line
 
     // An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
-    var dataset = [];
-
-
 
     // var dataset = d3.range(n).map(function (d) {
     //   return {
