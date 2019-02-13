@@ -1,6 +1,6 @@
 .line {
     fill: none;
-    /* stroke: #555; */
+    stroke: #555;
     stroke-width: 1;
 }
 
@@ -13,6 +13,17 @@
     fill: #420dab;
     stroke: #fff;
 }
+
+.blue {
+    fill: #108bff;
+    stroke: #05f;
+}
+
+.red {
+    fill: #ec4555;
+    stroke: #f33;
+}
+
 .focus circle {
     fill: none;
     stroke: #bada55;
