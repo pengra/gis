@@ -42,9 +42,17 @@ def data_detail_json(request, id):
             'error': True,
             'message': 'Invalid Run ID'
         }, status=404)
+    events = Event.objects.filter(run=run)
     return JsonResponse({
         'error': False,
-        'data': serializers.serialize('json', Event.objects.filter(run=run))
+        'data': [
+            {
+                "map": event.map,
+                "weights": event.weights,
+                "scores": event.scores,
+                "type": event.type
+            } for event in events
+        ]
     }, status=200)
 
 class StateListView(TemplateView):
