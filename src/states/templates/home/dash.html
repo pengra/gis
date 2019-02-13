@@ -37,16 +37,25 @@
   fetch(`/data/${run_id}.json`)
     .then((response) => response.json())
     .then((json) => {
+      min = 0
+      max = 0
       dataset = json.data.map((e) => {
+        score = e.scores.population;
+        if (score < min) {
+          min = score;
+        }
+        if (score > max) {
+          max = score;
+        }
         return {
-          "y": e.scores.population
+          "y": score
         }
       })
       console.log(dataset)
-      drawGraph(dataset);
+      drawGraph(dataset, min, max, dataset.length);
     })
 
-  var drawGraph = function (dataset) {
+  var drawGraph = function (dataset, min, max) {
     var margin = {
       top: 50,
       right: 50,
@@ -57,7 +66,7 @@
     var height = (window.innerHeight / 2); // Use half the window's height
 
     // The number of datapoints
-    var n = 500;
+    var n = dataset.length;
 
     // X scale will use the index of our data
     var xScale = d3.scaleLinear()
@@ -66,7 +75,7 @@
 
     // Y scale will use the randomly generated number 
     var yScale = d3.scaleLinear()
-      .domain([0, 1]) // input 
+      .domain([0 < min ? 0 : min, 1 > max ? 1 : max]) // input 
       .range([height, 0]); // output 
 
     // d3's line generator
