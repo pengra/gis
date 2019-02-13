@@ -43,7 +43,7 @@
       political_colors = []
       dataset = json.data.map((e) => {
         score = e.scores.population;
-        political_outcomes.push(
+        political_colors.push(
           e.d_win ? "blue" : (e.r_win ? "red" : "grey")
         )
         if (score < min) {
@@ -56,10 +56,10 @@
           "y": score
         }
       })
-      drawGraph(dataset, min, max, political_outcomes);
+      drawGraph(dataset, min, max, political_colors);
     })
 
-  var drawGraph = function (dataset, min, max, political_outcomes) {
+  var drawGraph = function (dataset, min, max, political_colors) {
     var margin = {
       top: 50,
       right: 50,
