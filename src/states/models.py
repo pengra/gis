@@ -131,6 +131,10 @@ class Event(models.Model):
     @property
     def democratic_win(self):
         return self.scores['democrat_seats'] > self.scores['republican_seats']
+    
+    @property
+    def republican_win(self):
+        return self.scores['democrat_seats'] < self.scores['republican_seats']
 
 
 class ProcessQueue(models.Model):
