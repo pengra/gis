@@ -114,6 +114,16 @@
         .tickFormat(d3.format(".1e"))
       ); // For scientific notation
 
+    // Add background colors indicating political outcome
+    // 12. Appends a circle for each datapoint 
+    svg.selectAll(".dot")
+        .data(dataset)
+      .enter().append("circle") // Uses the enter().append() method
+        .attr("class", "dot") // Assign a class for styling
+        .attr("cx", function(d, i) { return xScale(i) })
+        .attr("cy", function(d) { return yScale(d.y) })
+        .attr("r", function(d, i) { return political_colors[i] == 'blue' ? 1 : 0 });
+
     // Append the path, bind the data, and call the line generator 
     svg.append("path")
       .datum(dataset) // 10. Binds data to the line 
@@ -122,6 +132,8 @@
       .attr("stroke", (d, i) => {
         return political_colors[i]
       });
+    
+    
 
     // Appends a dot for each datapoint 
     svg.selectAll(".dot")
