@@ -50,6 +50,7 @@ def data_detail_json(request, id):
 
     min_ = request.GET.get('min', 0)
     max_ = request.GET.get('max', len(events))
+    step = request.GET.get('step', 1)
 
     if isinstance(min_, str):
         if min_.isnumeric():
@@ -69,11 +70,23 @@ def data_detail_json(request, id):
                 'message': 'Invalid max value'
             }, status=400)
 
+    if isinstance(step, str):
+        if step.isnumeric():
+            step = int(step)
+        else:
+            return JsonResponse({
+                'error': True,
+                'message': 'Invalid step value'
+            }, status=400)
+
+
+
     return JsonResponse({
         'error': False,
         'meta': {
             'min': min_,
             'max': max_,
+            'step': step,
         },
         'data': [
             {
