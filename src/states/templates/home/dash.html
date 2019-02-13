@@ -75,7 +75,7 @@
     .attr("width", width + margin.right + margin.left)
     .attr("height", height + margin.bottom + margin.top)
     .append("g")
-    .attr("transform", "translate(" + margin.left + ",0)");
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   // 3. Call the x axis in a group tag
   svg.append("g")
