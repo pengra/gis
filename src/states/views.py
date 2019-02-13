@@ -51,6 +51,22 @@ def data_detail_json(request, id):
     min_ = request.GET.get('min', 0)
     max_ = request.GET.get('max', len(events))
 
+    if min_.isnumeric():
+        min_ = int(min_)
+    else:
+        return JsonResponse({
+            'error': True,
+            'message': 'Invalid min value'
+        }, status=400)
+
+    if max_.isnumeric():
+        max_ = int(max_)
+    else:
+        return JsonResponse({
+            'error': True,
+            'message': 'Invalid max value'
+        }, status=400)
+
     return JsonResponse({
         'error': False,
         'meta': {
