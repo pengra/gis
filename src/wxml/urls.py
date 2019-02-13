@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='home/main.html')),
     path('data/', DataView.as_view()),
+    path('data/<uuid:id>/', DataView.as_view()),
     path('api/', APIView.as_view()),
     path('states/', StateListView.as_view()),
     path('documentation/', TemplateView.as_view(template_name='documentation/overview.html')),
