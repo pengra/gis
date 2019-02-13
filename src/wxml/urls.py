@@ -18,7 +18,7 @@ from django.urls import path
 from django.views.generic import TemplateView
 from django.conf.urls.static import static
 from wxml.settings import DEBUG, MEDIA_URL, MEDIA_ROOT
-from states.views import DataView, StateListView, APIView, DataDetailView
+from states.views import DataView, StateListView, APIView, DataDetailView, data_detail_json
 
 urlpatterns = [
     path('admin/', admin.site.urls),
