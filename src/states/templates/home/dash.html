@@ -2,11 +2,10 @@
 {% load static %}
 
 {% block head %}
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://d3js.org/d3.v5.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-  crossorigin="anonymous"></script>
 <link href="{% static 'graphs/d3.css' %}" rel='stylesheet' />
+<link href="{% static 'assets/multirange.css' %}" rel='stylesheet' />
+<script src="{% static 'assets/multirange.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -24,8 +23,7 @@
     <div class="row">
       <div class="col-md-12">
         <label for="amount">Time range:</label>
-        <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-        <div id="slider-range"></div>
+        <input type="range" multiple value="0,{{run.iterations}}" />
       </div>
       <div class="col-md-12" id="graph">
         <br />
@@ -46,38 +44,11 @@
 </main>
 
 <script>
-  $(function () {
-    $("#slider-range").slider({
-      range: true,
-      min: 0,
-      max: 500,
-      values: [75, 300],
-      slide: function (event, ui) {
-        $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
-      }
-    });
-    $("#amount").val("$" + $("#slider-range").slider("values", 0) +
-      " - $" + $("#slider-range").slider("values", 1));
-  });
-</script>
-
-<script>
   var run_id = "{{run.id}}";
 
   fetch(`/data/${run_id}.json`)
     .then((response) => response.json())
     .then((json) => {
-      $('#slider-range').slider({
-        range: true,
-        min: json.meta.min,
-        max: json.meta.max,
-        values: [json.meta.min, json.meta.max],
-        slide: function(e, ui) {
-          $('#amount').val("" + ui.values[0] + ' - ' + ui.values[1]);
-        }
-      });
-      $('#amount').val("" + $("#slider-range").slider("values", 0) + " - " + $("#slider-range").slider("values", 1));
-
       min = 0
       max = 0
       political_colors = []
