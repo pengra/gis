@@ -32,7 +32,12 @@
             <label for="inputMax" class="sr-only">Maximum Iteration</label>
             <input type="number" class="form-control" id="inputMax" value="{{run.iterations}}">
           </div>
-          <button class="btn btn-primary mb-2" onclick="loadData($('#inputMin').val(), $('#inputMax').val())">Reload Page</button>
+          <div class="form-group mb-2">
+            <label for="inputStep" class="sr-only">Step Size</label>
+            <input type="number" class="form-control" id="inputStep" value="1000">
+          </div>
+          <button class="btn btn-primary mb-2" onclick="loadData($('#inputMin').val(), $('#inputMax').val(), $('#inputStep').val())">Reload
+            Page</button>
         </div>
       </div>
       <div class="col-md-6">
@@ -59,8 +64,8 @@
 <script>
   var run_id = "{{run.id}}";
 
-  var loadData = function (min, max) {
-    fetch(`/data/${run_id}.json?min=${min}&max=${max}`)
+  var loadData = function (min, max, step) {
+    fetch(`/data/${run_id}.json?min=${min}&max=${max}&step=${step}`)
       .then((response) => response.json())
       .then((json) => {
         min = 0
@@ -176,6 +181,6 @@
       .data(dataset)
   }
 
-  loadData(0, "{{run.iterations}}")
+  loadData(0, "{{run.iterations}}", 1000)
 </script>
 {% endblock %}

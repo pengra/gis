@@ -60,7 +60,7 @@ def data_detail_json(request, id):
                 'error': True,
                 'message': 'Invalid min value'
             }, status=400)
-    
+
     if isinstance(max_, str):
         if max_.isnumeric():
             max_ = int(max_)
@@ -78,8 +78,6 @@ def data_detail_json(request, id):
                 'error': True,
                 'message': 'Invalid step value'
             }, status=400)
-
-
 
     return JsonResponse({
         'error': False,
