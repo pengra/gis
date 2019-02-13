@@ -31,6 +31,8 @@
 </main>
 
 <script>
+  var run_id = "{{run.id}}";
+
   var margin = {
     top: 50,
     right: 50,
@@ -64,11 +66,19 @@
     // .curve(d3.curveMonotoneX) // apply smoothing to the line
 
   // An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
-  var dataset = d3.range(n).map(function (d) {
-    return {
-      "y": d3.randomUniform(1)()
+  var dataset = [];
+
+  fetch(`/data/${run_id}.json`).then((response) => response.json()).then(
+    (json) => {
+      dataset = json.data.map((e) => {return {"y": e.scores.population}})
     }
-  })
+  )
+
+  // var dataset = d3.range(n).map(function (d) {
+  //   return {
+  //     "y": d3.randomUniform(1)()
+  //   }
+  // })
 
   // Add the SVG to the page
   var svg = d3.select("#graph").append("svg")
