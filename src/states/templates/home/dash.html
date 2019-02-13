@@ -10,6 +10,7 @@
 <main role="main">
   <div class="container">
     <div class="row">
+      <br/>
       <div class="col-md-12">
         <div class="border-bottom">
           <h1>Run ID: {{run.id}}</h1>
@@ -32,7 +33,6 @@
 
 <script>
   var run_id = "{{run.id}}";
-  var dataset = [];
 
   fetch(`/data/${run_id}.json`)
     .then((response) => response.json())
@@ -43,11 +43,11 @@
             "y": e.scores.population
           }
         })
-        drawGraph();
+        drawGraph(dataset);
       }
     )
 
-  var drawGraph = function () {
+  var drawGraph = function (dataset) {
     var margin = {
       top: 50,
       right: 50,
