@@ -51,7 +51,8 @@ def data_detail_json(request, id):
                 "weights": event.weights,
                 "scores": event.scores,
                 "type": event.type,
-                "win": "d" if event.democratic_win else "r"
+                "d_win": event.democratic_win,
+                "r_win": event.republican_win,
             } for event in events
         ]
     }, status=200)
