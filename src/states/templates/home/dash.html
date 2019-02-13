@@ -113,7 +113,8 @@
     svg.append("g")
       .attr("class", "y axis")
       .call(d3.axisLeft(yScale) // Create an axis component with d3.axisLeft
-        .tickFormat(d3.format(".1e"))); // For scientific notation
+        .tickFormat(d3.format(".1e"))
+      ); // For scientific notation
 
     // Append the path, bind the data, and call the line generator 
     svg.append("path")
