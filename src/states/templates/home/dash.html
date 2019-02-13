@@ -54,8 +54,8 @@
     
     // 1. Add the SVG to the page and employ #2
     var svg = d3.select("#graph").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("width", "100%")
+        .attr("height", "50vh")
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     
