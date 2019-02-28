@@ -100,6 +100,7 @@ class Run(models.Model):
 
     @property
     def last_weight_string(self):
+        # Very slow
         last = Event.objects.filter(run=self).last()
         if last:
             return ", ".join(["{}={}".format(key, item) for key, item in last.weights.items()])
@@ -107,6 +108,7 @@ class Run(models.Model):
 
     @property
     def last_percentages_string(self):
+        # Very slow
         last = Event.objects.filter(run=self).last()
         if last:
             return ", ".join(["{}={}".format(key, item) for key, item in last.scores.items()])
