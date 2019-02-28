@@ -33,10 +33,10 @@
 
               <tr onclick="location.href = '/data/{{run.id}}';">
                 <td>{{run.id}}</td>
-                <td>{{run.state.code}}</td>
-                <td>{{run.last_weight_string}}</td>
-                <td>{{run.iterations}}</td>
-                <td>{{run.last_percentages_string}}</td>
+                <td>{/{run.state.code}}</td>
+                <td>{/{run.last_weight_string}/}</td>
+                <td>{/{run.iterations}/}</td>
+                <td>{/{run.last_percentages_string}/}</td>
               </tr>
 
               {% endfor %}
