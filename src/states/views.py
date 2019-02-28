@@ -15,6 +15,7 @@ import threading
 # Create your views here.
 
 PAGE_SIZE_MAX = 4000
+QUERY_SIZE_MAX = PAGE_SIZE_MAX * 2
 
 class DataView(TemplateView):
     template_name = "home/data.html"
@@ -78,11 +79,11 @@ def data_detail_json(request, id):
                 'message': 'Invalid step value'
             }, status=400)
 
+    if (max_ - min_) > QUERY_SIZE_MAX:
+        max_ = QUERY_SIZE_MAX + min_
+
     if (max_ - min_) // step > PAGE_SIZE_MAX:
         max_ = (PAGE_SIZE_MAX * step) + min_
-
-    print(min_)
-    print(max_)
 
     return JsonResponse({
         'error': False,
