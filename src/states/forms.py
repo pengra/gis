@@ -11,3 +11,4 @@ class CreateRunForm(forms.Form):
 class BulkEventPushForm(forms.Form):
     run = forms.UUIDField() # event id
     file = forms.FileField() # events.pk3
+    
