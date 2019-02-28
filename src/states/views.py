@@ -14,7 +14,7 @@ import threading
 
 # Create your views here.
 
-PAGE_SIZE_MAX = 3000
+PAGE_SIZE_MAX = 5000
 
 class DataView(TemplateView):
     template_name = "home/data.html"
