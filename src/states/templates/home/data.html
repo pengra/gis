@@ -22,9 +22,9 @@
               <tr>
                 <th>ID</th>
                 <th>State</th>
-                <th>Weights</th>
+                <!-- <th>Weights</th> -->
                 <th>Iteration</th>
-                <th>Scores</th>
+                <!-- <th>Scores</th> -->
               </tr>
             </thead>
             <tbody>
@@ -34,9 +34,9 @@
               <tr onclick="location.href = '/data/{{run.id}}';">
                 <td>{{run.id}}</td>
                 <td>{{run.state.code}}</td>
-                <td>{/{run.last_weight_string}/}</td>
+                <!-- <td>{#{run.last_weight_string}#}</td> -->
                 <td>{{run.iterations}}</td>
-                <td>{/{run.last_percentages_string}/}</td>
+                <!-- <td>{#{run.last_percentages_string}#}</td> -->
               </tr>
 
               {% endfor %}
