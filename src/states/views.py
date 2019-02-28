@@ -19,11 +19,16 @@ class DataView(TemplateView):
     template_name = "home/data.html"
 
     def get_context_data(self, *args, **kwargs):
+        print("start")
         context = super().get_context_data(*args, **kwargs)
+        print("super")
         context['runs'] = Run.objects.all()
+        print("runs")
         context['tasks'] = ProcessQueue.objects.filter(
             status='queued')[:100].count() + 1
+        print("tasks")
         context['working'] = ProcessQueue.objects.filter(status='running')
+        print("context")
         return context
 
 
