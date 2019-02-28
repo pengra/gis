@@ -77,6 +77,9 @@ def data_detail_json(request, id):
                 'message': 'Invalid step value'
             }, status=400)
 
+    if max_ - min_ > (PAGE_SIZE_MAX * step):
+        max_ = (PAGE_SIZE_MAX * step) + min_
+
     return JsonResponse({
         'error': False,
         'meta': {
