@@ -45,7 +45,7 @@ def data_detail_json(request, id):
             'error': True,
             'message': 'Invalid Run ID'
         }, status=404)
-    events = Event.objects.filter(run=run)
+    
 
     min_ = request.GET.get('min', 0)
     max_ = request.GET.get('max', len(events))
@@ -99,7 +99,7 @@ def data_detail_json(request, id):
                 "type": event.type,
                 "d_win": event.democratic_win,
                 "r_win": event.republican_win,
-            } for event in events[min_:max_:step]
+            } for event in Event.objects.filter(run=run)[min_:max_:step]
         ]
     }, status=200)
 
