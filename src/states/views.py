@@ -48,7 +48,7 @@ def data_detail_json(request, id):
     
 
     min_ = request.GET.get('min', 0)
-    max_ = request.GET.get('max', len(events))
+    max_ = request.GET.get('max', PAGE_SIZE_MAX)
     step = request.GET.get('step', 1)
 
     if isinstance(min_, str):
